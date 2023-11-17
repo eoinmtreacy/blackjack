@@ -1,4 +1,6 @@
 import random
+import pygame as pg
+from pygame.locals import *
 
 class Card:
     def __init__(self, suit, value):
@@ -161,7 +163,6 @@ class Game:
 name = input("Enter your name: ")
 stack = int(input("Enter your bankroll: "))
 decks = int(input("How many decks do you want to play with? "))
-
 newGame = Game(name, stack, decks)
 
 while len(newGame.deck.cards) > decks * 52 /2:
@@ -176,7 +177,7 @@ while len(newGame.deck.cards) > decks * 52 /2:
                 hand.wager = bet
                 newGame.read_hand(hand)
                 while not hand.bust():
-                    command = input("H/h to hit, enter to stand: ")
+                    command = input("H/h to hit, S/s to split, D/d to double, enter to stand: ")
                     if command == "h" or command == "H": 
                         newGame.hit(hand)
                     elif hand.cards[0].value == hand.cards[1].value and command == "s" or command == "S":
