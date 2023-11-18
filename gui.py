@@ -11,7 +11,7 @@ stack_input = Input("blue", (HEIGHT-100)/2,(WIDTH-40)/2,100,40)
 
 screen = pygame.display.set_mode((HEIGHT,WIDTH))
 
-game_running, setup = True, False
+game_running = True
 name_input.active = True
 
 while game_running:
@@ -62,10 +62,18 @@ while game_running:
                 if event.type == pygame.QUIT:
                     game_running = False
                     break
-        
-        for hand in game.player.hands:
-            for i, card in enumerate(hand.cards):
-                card.rect = pygame.Rect(i * 30, HEIGHT/2, 30, 50)
+                for hand in game.player.hands:
+                    if event.type == pygame.KEYDOWN:
+                        if event.unicode == "h" or event.unicode == "H":
+                            game.hit(hand)
+                        if event.unicode == "s" or event.unicode == "S":
+                            print("fire")
+                            # game.player.add_hand(Hand(hand.cards[1], game.deck.draw()))
+                            # hand = Hand(hand.cards[0], game.deck.draw())
+
+        for i, hand in enumerate(game.player.hands):
+            for j, card in enumerate(hand.cards):
+                card.rect = pygame.Rect(i * 20 + j * 30, HEIGHT/2, 30, 50)
                 card.draw(screen)
         
         for hand in game.dealer.hands:
