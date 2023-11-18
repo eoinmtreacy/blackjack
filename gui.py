@@ -53,6 +53,7 @@ while game_running:
     # game object takes player name, stack and no. of decks
     game = Game(NAME, int(STACK), 1)
     game.deal()
+    game.player.add_hand(Hand(game.deck.draw(), game.deck.draw()))
 
     # game loop
     while True:
@@ -67,13 +68,13 @@ while game_running:
                         if event.unicode == "h" or event.unicode == "H":
                             game.hit(hand)
                         if event.unicode == "s" or event.unicode == "S":
-                            print("fire")
-                            # game.player.add_hand(Hand(hand.cards[1], game.deck.draw()))
-                            # hand = Hand(hand.cards[0], game.deck.draw())
+                            
+                            pass
+                            
 
         for i, hand in enumerate(game.player.hands):
             for j, card in enumerate(hand.cards):
-                card.rect = pygame.Rect(i * 20 + j * 30, HEIGHT/2, 30, 50)
+                card.rect = pygame.Rect(j * 30, HEIGHT/2, 30, 50)
                 card.draw(screen)
         
         for hand in game.dealer.hands:

@@ -95,6 +95,7 @@ class Hand:
     def __init__(self, card1, card2, wager = 0):
         self.cards = (card1, card2)
         self.wager = wager
+        self.active = False
         
     def value(self):
         value = 0
@@ -117,7 +118,7 @@ class Hand:
 
     def __str__(self):
         return (f'{self.cards[0]} {self.cards[1]}')
-
+    
 class Game:
     def __init__(self, player, stack, decks):
         self.player = Player(player, stack)
