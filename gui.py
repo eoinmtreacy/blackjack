@@ -49,14 +49,30 @@ while game_running:
             
             pygame.display.update()
 
-    # deal loop
-    shoe = Deck(Card, 1)
-    shoe.shuffle()
-    rand_card = shoe.draw()
-    while True:
+    
+    # game object takes player name, stack and no. of decks
+    game = Game(NAME, int(STACK), 1)
+    game.deal()
 
-        screen.fill("green")
-        rand_card.draw(screen)
+    # game loop
+    while True:
+        screen.fill("grey")
+
+        for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    game_running = False
+                    break
+        
+        for hand in game.player.hands:
+            for i, card in enumerate(hand.cards):
+                card.rect = pygame.Rect(i * 30, HEIGHT/2, 30, 50)
+                card.draw(screen)
+        
+        for hand in game.dealer.hands:
+            for i, card in enumerate(hand.cards):
+                card.rect = pygame.Rect(i * 30, 30, 30, 50)
+                card.draw(screen)
+
         pygame.display.update()
 
 pygame.quit()

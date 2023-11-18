@@ -31,7 +31,7 @@ class Input:
 class Card:
     def __init__(self, suit, value, x, y, w=30, h=50):
         self.suits = ("Clubs", "Diamonds", "Hearts", "Spades")
-        self.colors = ("green", "blue", "red", "black")
+        self.colors = ("black", "red", "red", "black")
         self.values = (None, "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "Ten", "Jack", "Queen", "King")
         self.suit = self.suits[suit]
         self.value = self.values[value]
@@ -56,6 +56,9 @@ class Card:
         else:
             return False
         
+    def __str__(self):
+        return (f"{self.value} of {self.suit}")
+        
 class Deck:
     def __init__(self, card, number):
         self.cards = []
@@ -75,3 +78,106 @@ class Deck:
             
     def shuffle(self):
         random.shuffle(self.cards)
+
+class Player:
+    def __init__(self, name, stack):
+        self.name = name
+        self.stack = stack
+        self.hands = []
+    
+    def __str__(self):
+        return(f'{self.name} has {self.stack} left in their stack')
+    
+    def add_hand(self,hand):
+        self.hands.append(hand)
+
+class Hand:
+    def __init__(self, card1, card2, wager = 0):
+        self.cards = (card1, card2)
+        self.wager = wager
+        
+    def value(self):
+        value = 0
+        for card in self.cards:
+            addition = 10 if card.values.index(card.value) > 10 else card.values.index(card.value)
+            value += addition
+            if value + 10 < 22:
+                if card.value == "Ace":
+                    value += 10
+        return value
+    
+    def bust(self):
+        if self.value() > 21:
+            return True
+        else:
+            return False
+        
+    def bet(self, wager):
+        self.wager = wager
+
+    def __str__(self):
+        return (f'{self.cards[0]} {self.cards[1]}')
+
+class Game:
+    def __init__(self, player, stack, decks):
+        self.player = Player(player, stack)
+        self.dealer = Player("Dealer", 1000)
+        self.deck = Deck(Card, decks)
+        self.deck.shuffle()
+        
+    def hit(self, curr_hand):
+        hit = self.deck.draw()
+        curr_hand.cards += (hit,)
+        print(f'{hit} ({curr_hand.value()})')
+        if curr_hand.bust():
+            self.player.stack -= 1
+            print("Player bust, dealer wins")
+            return 1
+        else:
+            return 0
+        
+    def deal(self): # re-add wager
+        if len(self.deck.cards) != 0:
+            self.player.hands, self.dealer.hands = [Hand(self.deck.draw(), self.deck.draw())], [Hand(self.deck.draw(), self.deck.draw())]
+            
+            if self.dealer.hands[0].value() == 21 and self.player.hands[0].value() != 21:
+                print(f'Dealer wins, blackjack')
+                # self.player.stack -= wager
+                return True
+            
+            else:
+                return False
+            
+        else:
+            print("Deck is empty")
+
+    def read_hand(self, hand):
+        print(f"{self.player.name} has", end = " ")
+        for card in hand.cards:
+            print(card, end = " ")
+        print(f'({hand.value()})')
+        
+        
+    def dealerPlay(self):
+        print(f'Dealer has', end = ' ')
+        for card in self.dealer.hands[0].cards:
+            print(card, end=" ")
+        print(f'({self.dealer.hands[0].value()})')
+
+        while 17 > self.dealer.hands[0].value():
+            hit = self.deck.draw()
+            self.dealer.hands[0].cards += (hit,)
+            print(f'{hit} ({self.dealer.hands[0].value()})')
+
+        for hand in self.player.hands:
+            if self.dealer.hands[0].value() > 21:
+                print(f"Dealer busts, you win {hand.wager}")
+                self.player.stack += hand.wager
+            elif self.dealer.hands[0].value() > hand.value():
+                print(f"Dealer wins, you lose {hand.wager}")
+                self.player.stack -= hand.wager
+            elif self.dealer.hands[0].value() == hand.value():
+                print("Push")
+            else:
+                print(f"You win {hand.wager}")
+                self.player.stack += hand.wager
