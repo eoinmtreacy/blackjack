@@ -92,10 +92,10 @@ class Player:
         self.hands.append(hand)
 
 class Hand:
-    def __init__(self, card1, card2, wager = 0):
+    def __init__(self, card1, card2, wager = 0, active = False):
         self.cards = (card1, card2)
         self.wager = wager
-        self.active = False
+        self.active = active
         
     def value(self):
         value = 0

@@ -54,7 +54,7 @@ while game_running:
     game = Game(NAME, int(STACK), 1)
     game.deal()
     game.player.add_hand(Hand(game.deck.draw(), game.deck.draw()))
-
+    game.player.hands[1].active = True
     # game loop
     while True:
         screen.fill("grey")
@@ -64,12 +64,13 @@ while game_running:
                     game_running = False
                     break
                 for hand in game.player.hands:
-                    if event.type == pygame.KEYDOWN:
-                        if event.unicode == "h" or event.unicode == "H":
-                            game.hit(hand)
-                        if event.unicode == "s" or event.unicode == "S":
-                            
-                            pass
+                    if hand.active: 
+                        if event.type == pygame.KEYDOWN:
+                            if event.unicode == "h" or event.unicode == "H":
+                                game.hit(hand)
+                            if event.unicode == "s" or event.unicode == "S":
+                                
+                                pass
                             
 
         for i, hand in enumerate(game.player.hands):
