@@ -2,14 +2,14 @@ import pygame
 from pygame.locals import * 
 from objects import *
 
-HEIGHT, WIDTH = 480,300
+WIDTH, HEIGHT = 480, 300
 
 pygame.init()
 
-name_input = Input("red", (HEIGHT-100)/2,(WIDTH-40)/2,100,40)
-stack_input = Input("blue", (HEIGHT-100)/2,(WIDTH-40)/2,100,40)
+name_input = Input("red", (WIDTH-100)/2,(HEIGHT-40)/2,100,40)
+stack_input = Input("blue", (WIDTH-100)/2,(HEIGHT-40)/2,100,40)
 
-screen = pygame.display.set_mode((HEIGHT,WIDTH))
+screen = pygame.display.set_mode((WIDTH,HEIGHT))
 
 game_running = True
 name_input.active = True
@@ -54,7 +54,8 @@ while game_running:
     game = Game(NAME, int(STACK), 1)
     game.deal()
     game.player.add_hand(Hand(game.deck.draw(), game.deck.draw()))
-    game.player.hands[1].active = True
+    game.player.hands[0].active = True
+    print(len(game.player.hands))
     # game loop
     while True:
         screen.fill("grey")
@@ -69,13 +70,12 @@ while game_running:
                             if event.unicode == "h" or event.unicode == "H":
                                 game.hit(hand)
                             if event.unicode == "s" or event.unicode == "S":
-                                
-                                pass
-                            
+                                game.player.add_hand(Hand(hand.cards[1], game.deck.draw()))
+                                hand = Hand(hand.cards[0], game.deck.draw())                            
 
         for i, hand in enumerate(game.player.hands):
             for j, card in enumerate(hand.cards):
-                card.rect = pygame.Rect(j * 30, HEIGHT/2, 30, 50)
+                card.rect = pygame.Rect((i * WIDTH/len(game.player.hands)) + (j * 30), HEIGHT/2, 30, 50)
                 card.draw(screen)
         
         for hand in game.dealer.hands:
