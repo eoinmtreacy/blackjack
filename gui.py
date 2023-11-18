@@ -50,12 +50,13 @@ while game_running:
             pygame.display.update()
 
     # deal loop
-    deuce = Card(1, 2, 50, 50, 30, 50)
-    aSpades = Card(3, 1, 100, 50, 30, 50)
+    shoe = Deck(Card, 1)
+    shoe.shuffle()
+    rand_card = shoe.draw()
     while True:
+
         screen.fill("green")
-        deuce.draw(screen)
-        aSpades.draw(screen)
+        rand_card.draw(screen)
         pygame.display.update()
 
 pygame.quit()
