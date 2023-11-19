@@ -53,9 +53,8 @@ while game_running:
     # game object takes player name, stack and no. of decks
     game = Game(NAME, int(STACK), 1)
     game.deal()
-    game.player.add_hand(Hand(game.deck.draw(), game.deck.draw()))
     name_label = Label(NAME, (WIDTH/3), (HEIGHT/4) * 3 , WIDTH/5, HEIGHT/8)
-    stack_label = Label(str(game.player.stack), (WIDTH/3) * 2, (HEIGHT/4) * 3, WIDTH/5, HEIGHT/8)
+    stack_label = Label(str(game.player.stack), (WIDTH/3) * 2, (HEIGHT/4) * 3, WIDTH/5, HEIGHT/8, STACK)
     # game loop
     while True:
         screen.fill("darkgreen")

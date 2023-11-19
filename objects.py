@@ -11,8 +11,8 @@ class Input:
         self.img = self.font.render(self.text, True, self.color)
         self.active = False
 
-    def draw(self,screen):
-        screen.blit(self.img, self.rect)
+    def draw(self, screen):
+        screen.blit(self.img, self.rect.center)
         pygame.draw.rect(screen,self.color, self.rect, 2)
 
     def handle_type(self,event):
@@ -29,15 +29,18 @@ class Input:
                 self.img = self.font.render(self.text, True, self.color)
 
 class Label:
-    def __init__(self, name, x, y, w, h):
+    def __init__(self, name, x, y, w, h, value = 0):
         self.name = name
         self.rect = pygame.Rect(x, y, w, h)
         self.color = "grey"
         self.font = pygame.font.Font(None, 24)
         self.img = self.font.render(self.name, True, self.color)
+        self.value = value
 
     def draw(self, screen):
-        screen.blit(self.img, self.rect)
+        if self.value != 0:
+            self.name = self.value
+        screen.blit(self.img, self.rect.center)
         pygame.draw.rect(screen, self.color, self.rect, 2)
 
 class Card:
