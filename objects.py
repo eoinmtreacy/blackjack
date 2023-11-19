@@ -28,6 +28,18 @@ class Input:
                 # Re-render the text.
                 self.img = self.font.render(self.text, True, self.color)
 
+class Label:
+    def __init__(self, name, x, y, w, h):
+        self.name = name
+        self.rect = pygame.Rect(x, y, w, h)
+        self.color = "grey"
+        self.font = pygame.font.Font(None, 24)
+        self.img = self.font.render(self.name, True, self.color)
+
+    def draw(self, screen):
+        screen.blit(self.img, self.rect)
+        pygame.draw.rect(screen, self.color, self.rect, 2)
+
 class Card:
     def __init__(self, suit, value, x, y, w=30, h=50):
         self.suits = ("Clubs", "Diamonds", "Hearts", "Spades")

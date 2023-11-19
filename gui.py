@@ -54,10 +54,11 @@ while game_running:
     game = Game(NAME, int(STACK), 1)
     game.deal()
     game.player.add_hand(Hand(game.deck.draw(), game.deck.draw()))
-    print(game.player.hands[0].active)
+    name_label = Label(NAME, (WIDTH/3), (HEIGHT/4) * 3 , WIDTH/5, HEIGHT/8)
+    stack_label = Label(str(game.player.stack), (WIDTH/3) * 2, (HEIGHT/4) * 3, WIDTH/5, HEIGHT/8)
     # game loop
     while True:
-        screen.fill("grey")
+        screen.fill("darkgreen")
 
         for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -87,6 +88,9 @@ while game_running:
             for i, card in enumerate(hand.cards):
                 card.rect = pygame.Rect(i * 30, 30, 30, 50)
                 card.draw(screen)
+
+        for label in [name_label, stack_label]:
+            label.draw(screen)
 
         pygame.display.update()
 
