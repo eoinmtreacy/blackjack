@@ -55,6 +55,10 @@ while game_running:
     game.deal()
     name_label = Label(NAME, 20, (HEIGHT/4) * 3 , WIDTH/7, HEIGHT/8)
     stack_label = Label(str(game.player.stack), 120, (HEIGHT/4) * 3, WIDTH/7, HEIGHT/8, STACK)
+    hit_button = Button("hit", WIDTH/2, HEIGHT/4 * 3, 30, 30, "red")
+    split_button = Button("split", WIDTH/2 + 30, HEIGHT/4 * 3, 60, 30, "yellow")
+    stand_button = Button("stand", WIDTH/2 + 90, HEIGHT/4 * 3, 60, 30, "grey")
+    double_button = Button("double", WIDTH/2 + 150, HEIGHT/4 * 3, 60, 30, "hotpink")
     # hit = Button
     # game loop
     while True:
@@ -93,6 +97,9 @@ while game_running:
 
         for label in [name_label, stack_label]:
             label.draw(screen)
+
+        for button in [hit_button, stand_button, split_button, double_button]:
+            button.draw(screen)
 
         pygame.display.update()
 
