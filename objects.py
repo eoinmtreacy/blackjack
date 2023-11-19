@@ -1,17 +1,77 @@
+import pygame
 import random
-import pygame as pg
 from pygame.locals import *
+        
+class Input:
+    def __init__(self,color,x,y,h,w):
+        self.rect = pygame.Rect(x,y,h,w)
+        self.color = color
+        self.text = ""
+        self.font = pygame.font.Font(None, 24)
+        self.img = self.font.render(self.text, True, self.color)
+        self.active = False
+
+    def draw(self, screen):
+        screen.blit(self.img, self.rect.center)
+        pygame.draw.rect(screen,self.color, self.rect, 2)
+
+    def handle_type(self,event):
+        if self.active:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    self.active = False
+                    return self.text
+                elif event.key == pygame.K_BACKSPACE:
+                    self.text = self.text[:-1]
+                else:
+                    self.text += event.unicode
+                # Re-render the text.
+                self.img = self.font.render(self.text, True, self.color)
+
+class Label:
+    def __init__(self, name, x, y, w, h, value = 0):
+        self.name = name
+        self.rect = pygame.Rect(x, y, w, h)
+        self.color = "grey"
+        self.font = pygame.font.Font(None, 24)
+        self.img = self.font.render(self.name, True, self.color)
+        self.value = value
+
+    def draw(self, screen):
+        if self.value != 0:
+            self.name = self.value
+        screen.blit(self.img, self.rect.center)
+        pygame.draw.rect(screen, self.color, self.rect, 2)
+
+class Button:
+    def __init__(self, name, x, y, w, h, color):
+        self.name = name
+        self.rect = pygame.Rect(x, y, w, h)
+        self.color = color
+        self.font = pygame.font.Font(None, 24)
+        self.img = self.font.render(self.name, True, self.color)
+    
+    def draw(self, screen):
+        screen.blit(self.img, self.rect)
+        pygame.draw.rect(screen, self.color, self.rect, 2)
 
 class Card:
-    def __init__(self, suit, value):
+    def __init__(self, suit, value, x, y, w=30, h=50):
         self.suits = ("Clubs", "Diamonds", "Hearts", "Spades")
+        self.colors = ("black", "red", "red", "black")
         self.values = (None, "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "Ten", "Jack", "Queen", "King")
         self.suit = self.suits[suit]
         self.value = self.values[value]
-    
-    def __str__(self):
-        return (f"{self.value} of {self.suit}")
-        
+        self.rect = pygame.Rect(x,y,w,h)
+        self.color = self.colors[suit]
+        self.text = self.value[0] + self.suit[0]
+        self.font = pygame.font.Font(None, 24)
+        self.img = self.font.render(self.text, True, self.color)
+
+    def draw(self,screen):
+        screen.blit(self.img, self.rect)
+        pygame.draw.rect(screen, self.color, self.rect, 2)
+
     def __eq__(self, other):
         return self.value == other.value
     
@@ -23,13 +83,16 @@ class Card:
         else:
             return False
         
+    def __str__(self):
+        return (f"{self.value} of {self.suit}")
+        
 class Deck:
     def __init__(self, card, number):
         self.cards = []
         for num in range(number):
             for s in range(4):
                 for v in range(1,14):
-                    newCard = card(s, v)
+                    newCard = card(s, v, 0, 0)
                     self.cards.append(newCard)
         
     def draw(self):
@@ -42,21 +105,24 @@ class Deck:
             
     def shuffle(self):
         random.shuffle(self.cards)
-        
-    def reset(self, card):
-        self.cards = []
-        for s in range(4):
-            for v in range(13):
-                newCard = card(s, v)
-                self.cards.append(newCard)
-                
-    def sort_by_value(self):
-        self.cards = sorted(self.cards)
+
+class Player:
+    def __init__(self, name, stack):
+        self.name = name
+        self.stack = stack
+        self.hands = []
+    
+    def __str__(self):
+        return(f'{self.name} has {self.stack} left in their stack')
+    
+    def add_hand(self,hand):
+        self.hands.append(hand)
 
 class Hand:
-    def __init__(self, card1, card2, wager = 0):
+    def __init__(self, card1, card2, wager = 0, active = True):
         self.cards = (card1, card2)
         self.wager = wager
+        self.active = active
         
     def value(self):
         value = 0
@@ -79,18 +145,6 @@ class Hand:
 
     def __str__(self):
         return (f'{self.cards[0]} {self.cards[1]}')
-
-class Player:
-    def __init__(self, name, stack):
-        self.name = name
-        self.stack = stack
-        self.hands = []
-    
-    def __str__(self):
-        return(f'{self.name} has {self.stack} left in their stack')
-    
-    def add_hand(self,hand):
-        self.hands.append(hand)
     
 class Game:
     def __init__(self, player, stack, decks):
@@ -110,17 +164,22 @@ class Game:
         else:
             return 0
         
-    def deal(self,wager):
+    def split(self):
+        curr_hand = int
+        for hand in self.player.hands:
+            if hand.active:
+                curr_hand = self.player.hands.index(hand)
+                break
+        self.player.add_hand(Hand(self.player.hands[curr_hand].cards[1], self.deck.draw()))
+        self.player.hands[curr_hand] = Hand(self.player.hands[curr_hand].cards[0], self.deck.draw())
+        
+    def deal(self): # re-add wager
         if len(self.deck.cards) != 0:
-            print()
             self.player.hands, self.dealer.hands = [Hand(self.deck.draw(), self.deck.draw())], [Hand(self.deck.draw(), self.deck.draw())]
-                
-            print(f'Dealer showing {self.dealer.hands[0].cards[1]}')
             
-            if self.dealer.hands[0].value() == 21 and hand.value() != 21:
-                print(f'Dealer has {self.dealer.hands[0].cards[0]}')
+            if self.dealer.hands[0].value() == 21 and self.player.hands[0].value() != 21:
                 print(f'Dealer wins, blackjack')
-                self.player.stack -= wager
+                # self.player.stack -= wager
                 return True
             
             else:
@@ -159,50 +218,3 @@ class Game:
             else:
                 print(f"You win {hand.wager}")
                 self.player.stack += hand.wager
-
-name = input("Enter your name: ")
-stack = int(input("Enter your bankroll: "))
-decks = int(input("How many decks do you want to play with? "))
-newGame = Game(name, stack, decks)
-
-while len(newGame.deck.cards) > decks * 52 /2:
-    if newGame.player.stack > 0:
-        bet = int(input(f"{newGame.player.stack} remaining, enter bet:"))
-        if bet > newGame.player.stack:
-            print("Can't bet what you don't have, go home")
-            break
-        blackjack = newGame.deal(bet)
-        if not blackjack:
-            for hand in newGame.player.hands:
-                hand.wager = bet
-                newGame.read_hand(hand)
-                while not hand.bust():
-                    command = input("H/h to hit, S/s to split, D/d to double, enter to stand: ")
-                    if command == "h" or command == "H": 
-                        newGame.hit(hand)
-                    elif hand.cards[0].value == hand.cards[1].value and command == "s" or command == "S":
-                        newGame.player.add_hand(Hand(hand.cards[1], newGame.deck.draw()), bet)
-                        hand = Hand(hand.cards[0], newGame.deck.draw(), bet)
-                        newGame.read_hand(hand)
-                    elif command == "d" or command == "D":
-                        hand.wager *= 2
-                        newGame.hit(hand)
-                        break
-                    else:
-                        print(f"{newGame.player.name} stands")
-                        break
-            all_bust = True
-            for hand in newGame.player.hands:
-                if not hand.bust():
-                    all_bust = False
-                else:
-                    newGame.player.stack -= bet
-            if not all_bust:
-                newGame.dealerPlay()
-    else:
-        print("Go home, you're broke")
-        break
-else:
-    print("Halfway through deck, resetting")
-
-print("Finished!")
