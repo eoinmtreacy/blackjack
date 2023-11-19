@@ -43,6 +43,18 @@ class Label:
         screen.blit(self.img, self.rect.center)
         pygame.draw.rect(screen, self.color, self.rect, 2)
 
+class Button:
+    def __init__(self, name, x, y, w, h, color):
+        self.name = name
+        self.rect = pygame.Rect(x, y, w, h)
+        self.color = color
+        self.font = pygame.font.Font(None, 24)
+        self.img = self.font.render(self.name, True, self.color)
+    
+    def draw(self, screen):
+        screen.blit(self.img, self.rect)
+        pygame.draw.rect(screen, self.color, self.rect, 2)
+
 class Card:
     def __init__(self, suit, value, x, y, w=30, h=50):
         self.suits = ("Clubs", "Diamonds", "Hearts", "Spades")
@@ -151,6 +163,15 @@ class Game:
             return 1
         else:
             return 0
+        
+    def split(self):
+        curr_hand = int
+        for hand in self.player.hands:
+            if hand.active:
+                curr_hand = self.player.hands.index(hand)
+                break
+        self.player.add_hand(Hand(self.player.hands[curr_hand].cards[1], self.deck.draw()))
+        self.player.hands[curr_hand] = Hand(self.player.hands[curr_hand].cards[0], self.deck.draw())
         
     def deal(self): # re-add wager
         if len(self.deck.cards) != 0:

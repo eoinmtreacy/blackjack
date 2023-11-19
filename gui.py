@@ -53,12 +53,13 @@ while game_running:
     # game object takes player name, stack and no. of decks
     game = Game(NAME, int(STACK), 1)
     game.deal()
-    name_label = Label(NAME, (WIDTH/3), (HEIGHT/4) * 3 , WIDTH/5, HEIGHT/8)
-    stack_label = Label(str(game.player.stack), (WIDTH/3) * 2, (HEIGHT/4) * 3, WIDTH/5, HEIGHT/8, STACK)
+    name_label = Label(NAME, 20, (HEIGHT/4) * 3 , WIDTH/7, HEIGHT/8)
+    stack_label = Label(str(game.player.stack), 120, (HEIGHT/4) * 3, WIDTH/7, HEIGHT/8, STACK)
+    # hit = Button
     # game loop
     while True:
+        split = False
         screen.fill("darkgreen")
-
         for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     game_running = False
@@ -70,13 +71,15 @@ while game_running:
                                 game.hit(hand)
                                 break
                             if event.unicode == "s" or event.unicode == "S":
-                                game.player.add_hand(Hand(hand.cards[1], game.deck.draw()))
-                                hand = Hand(hand.cards[0], game.deck.draw())
+                                split = True
                                 break
                             if event.key == pygame.K_RETURN:
                                 hand.active = False
-                                print(f'{hand.active}')
                                 break
+
+        if split:
+            game.split()
+            split = False
 
         for i, hand in enumerate(game.player.hands):
             for j, card in enumerate(hand.cards):
