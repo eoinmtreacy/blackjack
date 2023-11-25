@@ -99,7 +99,6 @@ while game_running:
             label.draw(screen)
 
         for button in [hit_button, stand_button, split_button, double_button]:
-            button.process()
             button.draw(screen)
 
         pygame.display.update()

@@ -56,6 +56,7 @@ class Button:
     def draw(self, screen):
         screen.blit(self.img, self.rect)
         pygame.draw.rect(screen, self.color, self.rect, 2)
+        self.process()
 
     def handle_click(self):
         if self.on_click != " ":
