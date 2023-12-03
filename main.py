@@ -1,6 +1,7 @@
 from objects import *
 from input import *
 from hitting import *
+from dealer_play import *
 
 WIDTH, HEIGHT = 480, 300
 
@@ -28,13 +29,22 @@ while game_running:
     stand_button = Button("stand", WIDTH/2 + 90, HEIGHT/4 * 3, 60, 30, "grey", " ")
     double_button = Button("double", WIDTH/2 + 150, HEIGHT/4 * 3, 60, 30, "hotpink", "d")
     
-    menus = [stack_label, name_label, hit_button, split_button, stand_button, double_button]
 
     # game_loop
     while True:
         wager = take_input("green", screen, WIDTH/2, HEIGHT/2, 100, 40)
         wager_label = Label(str(wager), WIDTH/6*2, (HEIGHT/4) * 3, WIDTH/7, HEIGHT/8)
-        game.deal()
-        hitting(game, screen, WIDTH, HEIGHT, menus)
+        menus = [stack_label, name_label, wager_label, hit_button, split_button, stand_button, double_button]
+        if not game.deal(wager):
+            all_bust = hitting(game, screen, WIDTH, HEIGHT, menus)
+            if not all_bust:
+                dealer_play(game, screen, menus[:3])
+            else:
+                # dealer show
+                pass
+
+        # dealer play 
+        # stands at 17
+        # need to implement cards hide 
 
 pygame.quit()

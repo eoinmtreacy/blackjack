@@ -19,7 +19,16 @@ def hitting(game, screen, width, height, menus):
                             if event.key == pygame.K_RETURN:
                                 hand.active = False
                                 break
-
+        
+        done, bust = True, True
+        for hand in game.player.hands:
+            if hand.active:
+                done = False
+            if not hand.bust:
+                bust = False
+        if done:
+            return bust
+        
         for i, hand in enumerate(game.player.hands):
             for j, card in enumerate(hand.cards):
                 card.rect = pygame.Rect((i * width/len(game.player.hands)) + (j * 30), height/2, 30, 50)
