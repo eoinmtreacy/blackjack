@@ -1,7 +1,6 @@
 import pygame
 from pygame.locals import * 
 from objects import *
-from input import *
 
 WIDTH, HEIGHT = 480, 300
 
@@ -16,30 +15,47 @@ game_running = True
 name_input.active = True
 
 while game_running:
+    
+    # game set-up:
+    while name_input.active or stack_input.active:
+        
+        # enter name
+        while name_input.active:
+            screen.fill("grey")
 
-    NAME = take_input("red", screen, WIDTH/2, HEIGHT/2, 100, 40)
-    STACK = take_input("blue", screen, WIDTH/2, HEIGHT/2, 100, 40)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    game_running = False
+                NAME = name_input.handle_type(event)
 
+            if name_input.active:
+                name_input.draw(screen)
+            
+            pygame.display.update()
+        
+        stack_input.active = True
+        
+        # enter stack
+        while stack_input.active:
+            screen.fill("grey")
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    game_running = False
+                STACK = stack_input.handle_type(event)
+
+            if stack_input.active:
+                stack_input.draw(screen)
+            
+            pygame.display.update()
+
+    
     # game object takes player name, stack and no. of decks
     game = Game(NAME, int(STACK), 1)
-
-    wager = take_input("green", screen, WIDTH/2, HEIGHT/2, 100, 40)
-
     game.deal()
-    name_label = Label(NAME, 0, (HEIGHT/4) * 3 , WIDTH/7, HEIGHT/8)
-
-    # stack label reads from player object not from global so updates dynamically 
-    stack_label = Label(str(game.player.stack), WIDTH/6, (HEIGHT/4) * 3, WIDTH/7, HEIGHT/8, STACK)
-
-    # wager_label = Lable(wager, )
-    wager_label = Label(str(wager), WIDTH/6*2, (HEIGHT/4) * 3, WIDTH/7, HEIGHT/8)
-
-    hit_button = Button("hit", WIDTH/2, HEIGHT/4 * 3, 30, 30, "red", "h")
-    split_button = Button("split", WIDTH/2 + 30, HEIGHT/4 * 3, 60, 30, "yellow", "s")
-    stand_button = Button("stand", WIDTH/2 + 90, HEIGHT/4 * 3, 60, 30, "grey", " ")
-    double_button = Button("double", WIDTH/2 + 150, HEIGHT/4 * 3, 60, 30, "hotpink", "d")
+    name_label = Label(NAME, 20, (HEIGHT/4) * 3 , WIDTH/7, HEIGHT/8)
+    stack_label = Label(str(game.player.stack), 120, (HEIGHT/4) * 3, WIDTH/7, HEIGHT/8, STACK)
     
-    buttons = [hit_button, split_button, stand_button, double_button]
     # hit = Button
     # game loop
     while True:
@@ -76,10 +92,10 @@ while game_running:
                 card.rect = pygame.Rect(i * 30, 30, 30, 50)
                 card.draw(screen)
 
-        for label in [name_label, stack_label, wager_label]:
+        for label in [name_label, stack_label]:
             label.draw(screen)
 
-        for button in buttons:
+        for button in [hit_button, stand_button, split_button, double_button]:
             button.draw(screen)
 
         pygame.display.update()

@@ -43,12 +43,13 @@ class Label:
         pygame.draw.rect(screen, self.color, self.rect, 2)
 
 class Button:
-    def __init__(self, name, x, y, w, h, color):
+    def __init__(self, name, x, y, w, h, color, key):
         self.name = name
         self.rect = pygame.Rect(x, y, w, h)
         self.color = color
         self.font = pygame.font.Font(None, 24)
         self.img = self.font.render(self.name, True, self.color)
+        self.key = key
     
     def draw(self, screen):
         screen.blit(self.img, self.rect)
