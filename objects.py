@@ -9,7 +9,7 @@ class Input:
         self.text = ""
         self.font = pygame.font.Font(None, 24)
         self.img = self.font.render(self.text, True, self.color)
-        self.active = False
+        self.active = True
 
     def draw(self, screen):
         screen.blit(self.img, self.rect.center)
@@ -19,12 +19,12 @@ class Input:
         if self.active:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
-                    self.active = False
                     return self.text
                 elif event.key == pygame.K_BACKSPACE:
                     self.text = self.text[:-1]
                 else:
                     self.text += event.unicode
+                print(self.text)
                 # Re-render the text.
                 self.img = self.font.render(self.text, True, self.color)
 
