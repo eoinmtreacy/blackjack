@@ -53,6 +53,7 @@ while game_running:
     # game object takes player name, stack and no. of decks
     game = Game(NAME, int(STACK), 1)
     game.deal()
+    
     name_label = Label(NAME, 20, (HEIGHT/4) * 3 , WIDTH/7, HEIGHT/8)
     stack_label = Label(str(game.player.stack), 120, (HEIGHT/4) * 3, WIDTH/7, HEIGHT/8, STACK)
     hit_button = Button("hit", WIDTH/2, HEIGHT/4 * 3, 30, 30, "red", "h")
