@@ -24,7 +24,6 @@ class Input:
                     self.text = self.text[:-1]
                 else:
                     self.text += event.unicode
-                print(self.text)
                 # Re-render the text.
                 self.img = self.font.render(self.text, True, self.color)
 
