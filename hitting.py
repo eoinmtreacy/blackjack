@@ -1,4 +1,5 @@
 from objects import * 
+import time
 
 def hitting(game, screen, width, height, menus):
     while True:
@@ -19,14 +20,17 @@ def hitting(game, screen, width, height, menus):
                             if event.key == pygame.K_RETURN:
                                 hand.active = False
                                 break
-        
-        done, bust = True, True
+
+        # hand player bust state, will determine if dealer plays
+        done = True
         for hand in game.player.hands:
             if hand.active:
                 done = False
-            if not hand.bust:
-                bust = False
+                pygame.time.delay(100)
+            if hand.bust:
+                bust = True
         if done:
+            print(bust, "hitting.py")
             return bust
         
         for i, hand in enumerate(game.player.hands):

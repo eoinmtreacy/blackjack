@@ -2,4 +2,4 @@ from objects import *
 
 def dealer_play(game, screen, menus):
     print("dealer play")
-    input()
+    input("Type anything at all: ")
