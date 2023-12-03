@@ -22,9 +22,17 @@ while game_running:
 
     # game object takes player name, stack and no. of decks
     game = Game(NAME, int(STACK), 1)
+
+    wager = take_input("green", screen, WIDTH/2, HEIGHT/2, 100, 40)
+
     game.deal()
-    name_label = Label(NAME, 20, (HEIGHT/4) * 3 , WIDTH/7, HEIGHT/8)
-    stack_label = Label(str(game.player.stack), 120, (HEIGHT/4) * 3, WIDTH/7, HEIGHT/8, STACK)
+    name_label = Label(NAME, 0, (HEIGHT/4) * 3 , WIDTH/7, HEIGHT/8)
+
+    # stack label reads from player object not from global so updates dynamically 
+    stack_label = Label(str(game.player.stack), WIDTH/6, (HEIGHT/4) * 3, WIDTH/7, HEIGHT/8, STACK)
+
+    # wager_label = Lable(wager, )
+    wager_label = Label(str(wager), WIDTH/6*2, (HEIGHT/4) * 3, WIDTH/7, HEIGHT/8)
     # hit = Button
     # game loop
     while True:
@@ -61,7 +69,7 @@ while game_running:
                 card.rect = pygame.Rect(i * 30, 30, 30, 50)
                 card.draw(screen)
 
-        for label in [name_label, stack_label]:
+        for label in [name_label, stack_label, wager_label]:
             label.draw(screen)
 
         pygame.display.update()

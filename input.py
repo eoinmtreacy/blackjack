@@ -16,10 +16,6 @@ def take_input(color, screen, x, y, w, h):
                     print(output)
                     return output
 
-            
-
-            
-
         new_input.draw(screen)
         
         pygame.display.update()
