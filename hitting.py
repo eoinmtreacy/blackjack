@@ -1,5 +1,4 @@
 from objects import * 
-import time
 
 def hitting(game, screen, width, height, menus):
     while True:
@@ -21,17 +20,16 @@ def hitting(game, screen, width, height, menus):
                                 hand.active = False
                                 break
 
-        # hand player bust state, will determine if dealer plays
-        done = True
-        for hand in game.player.hands:
-            if hand.active:
-                done = False
-                pygame.time.delay(100)
-            if hand.bust:
-                bust = True
-        if done:
-            print(bust, "hitting.py")
-            return bust
+        # while any hands active keep playing
+        if any(list(filter(lambda hand : hand.active, game.player.hands))):
+            pass
+        else:
+            # if not hands active but at least one hand not bust
+            if any(list(filter(lambda hand : hand.bust, game.player.hands))):
+                return False
+            else:
+                # if all inactive and all bust 
+                return True
         
         for i, hand in enumerate(game.player.hands):
             for j, card in enumerate(hand.cards):
