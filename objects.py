@@ -140,6 +140,7 @@ class Hand:
         self.wager = wager
         self.active = active
         
+    @property
     def value(self):
         value = 0
         for card in self.cards:
@@ -194,7 +195,7 @@ class Game:
         if len(self.deck.cards) != 0:
             self.player.hands, self.dealer.hands = [Hand(self.deck.draw(), self.deck.draw())], [Hand(self.deck.draw(), self.deck.draw())]
             
-            if self.dealer.hands[0].value() == 21 and self.player.hands[0].value() != 21:
+            if self.dealer.hands[0].value == 21 and self.player.hands[0].value != 21:
                 print(f'Dealer wins, blackjack')
                 self.player.stack -= wager
                 return True

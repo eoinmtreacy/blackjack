@@ -16,6 +16,9 @@ def hitting(game, screen, width, height, menus):
                             if event.unicode == "s" or event.unicode == "S":
                                 game.split()
                                 break
+
+                            # handle doubling: ...if event.unicode == "d" etc 
+                            
                             if event.key == pygame.K_RETURN:
                                 hand.active = False
                                 break

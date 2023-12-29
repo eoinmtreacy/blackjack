@@ -39,7 +39,7 @@ while game_running:
             bust = hitting(game, screen, WIDTH, HEIGHT, menus)
             print(bust, "main.py")
             if not bust:
-                dealer_play(game, screen, menus[:3])
+                dealer_play(game, screen, WIDTH, HEIGHT, menus[:3])
             else:
                 pass
 
