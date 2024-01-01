@@ -2,6 +2,7 @@ from objects import *
 from input import *
 from hitting import *
 from dealer_play import *
+from settle import * 
 
 WIDTH, HEIGHT = 480, 300
 
@@ -40,12 +41,10 @@ while game_running:
         wager_label = Label(str(wager), WIDTH/6*2, (HEIGHT/4) * 3, WIDTH/7, HEIGHT/8)
 
         menus = [banker, name_label, wager_label, hit_button, split_button, stand_button, double_button]
-        if game.deal(wager):
+        if game.deal(wager, banker):
             bust = hitting(game, screen, WIDTH, HEIGHT, menus)
             if not bust:
-                dealer_play(game, screen, WIDTH, HEIGHT, menus[:3])
-            else:
-                pass
-
+                dealer_play(game, screen, WIDTH, HEIGHT, menus[:3], banker)
+            settle(game, screen, WIDTH, HEIGHT, menus[:3], banker)
 
 pygame.quit()
