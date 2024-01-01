@@ -43,6 +43,13 @@ class Label:
         screen.blit(self.img, self.rect.center)
         pygame.draw.rect(screen, self.color, self.rect, 2)
 
+class Banker(Label):
+    def __init__(self, name, x, y, w, h, value):
+        super().__init__(name, x, y, w, h, value)
+
+    def account(self, amount):
+        self.value +- amount
+
 class Button:
     def __init__(self, name, x, y, w, h, color, on_click):
         self.name = name
@@ -58,6 +65,8 @@ class Button:
         self.process()
 
     def handle_click(self):
+        "posts different event to event queue depending on button"
+
         if self.on_click != " ":
             newevent = pygame.event.Event(pygame.locals.KEYDOWN, unicode=self.on_click, key=pygame.locals.K_a, mod=pygame.locals.KMOD_NONE)
         else:
@@ -123,13 +132,9 @@ class Deck:
         random.shuffle(self.cards)
 
 class Player:
-    def __init__(self, name, stack):
+    def __init__(self, name):
         self.name = name
-        self.stack = stack
         self.hands = []
-    
-    def __str__(self):
-        return(f'{self.name} has {self.stack} left in their stack')
     
     def add_hand(self,hand):
         self.hands.append(hand)
@@ -165,9 +170,9 @@ class Hand:
         return (f'{self.cards[0]} {self.cards[1]}')
     
 class Game:
-    def __init__(self, player, stack, decks):
-        self.player = Player(player, stack)
-        self.dealer = Player("Dealer", 1000)
+    def __init__(self, player, decks):
+        self.player = Player(player)
+        self.dealer = Player("Dealer")
         self.deck = Deck(Card, decks)
         self.deck.shuffle()
         
@@ -176,7 +181,7 @@ class Game:
         curr_hand.cards += (hit,)
         print(f'{hit} ({curr_hand.value})')
         if curr_hand.bust():
-            self.player.stack -= 1
+            # Banker accounting
             print("Player bust, dealer wins")
             return 1
         else:
@@ -197,11 +202,11 @@ class Game:
             
             if self.dealer.hands[0].value == 21 and self.player.hands[0].value != 21:
                 print(f'Dealer wins, blackjack')
-                # self.player.stack -= wager
-                return True
+                # Banker accounting
+                return False
             
             else:
-                return False
+                return True
             
         else:
             print("Deck is empty")

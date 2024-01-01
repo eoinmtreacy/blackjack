@@ -27,7 +27,7 @@ def hitting(game, screen, width, height, menus):
         if any(list(filter(lambda hand : hand.active, game.player.hands))):
             pass
         else:
-            # if not hands active but at least one hand not bust
+            # if no hands active but at least one hand not bust
             if any(list(filter(lambda hand : hand.bust, game.player.hands))):
                 return False
             else:
