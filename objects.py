@@ -29,23 +29,20 @@ class Input:
                 self.img = self.font.render(self.text, True, self.color)
 
 class Label:
-    def __init__(self, name, x, y, w, h, value = 0):
-        self.name = name
+    def __init__(self, value, x, y, w, h):
+        self.value = value
         self.rect = pygame.Rect(x, y, w, h)
         self.color = "grey"
         self.font = pygame.font.Font(None, 24)
-        self.img = self.font.render(self.name, True, self.color)
-        self.value = value
+        self.img = self.font.render(self.value, True, self.color)
 
     def draw(self, screen):
-        if self.value != 0:
-            self.name = self.value
         screen.blit(self.img, self.rect.center)
         pygame.draw.rect(screen, self.color, self.rect, 2)
 
 class Banker(Label):
-    def __init__(self, name, x, y, w, h, value):
-        super().__init__(name, x, y, w, h, value)
+    def __init__(self, value, x, y, w, h):
+        super().__init__(value, x, y, w, h)
 
     def account(self, amount):
         self.value +- amount
@@ -196,13 +193,13 @@ class Game:
         self.player.add_hand(Hand(self.player.hands[curr_hand].cards[1], self.deck.draw()))
         self.player.hands[curr_hand] = Hand(self.player.hands[curr_hand].cards[0], self.deck.draw())
         
-    def deal(self, wager): # re-add wager
+    def deal(self, wager, banker): # re-add wager
         if len(self.deck.cards) != 0:
             self.player.hands, self.dealer.hands = [Hand(self.deck.draw(), self.deck.draw())], [Hand(self.deck.draw(), self.deck.draw())]
             
             if self.dealer.hands[0].value == 21 and self.player.hands[0].value != 21:
                 print(f'Dealer wins, blackjack')
-                # Banker accounting
+                banker.account(-wager)
                 return False
             
             else:

@@ -26,7 +26,8 @@ while game_running:
     stand_button = Button("stand", WIDTH/2 + 90, HEIGHT/4 * 3, 60, 30, "grey", " ")
     double_button = Button("double", WIDTH/2 + 150, HEIGHT/4 * 3, 60, 30, "hotpink", "d")
     
-    banker = Banker(NAME, WIDTH/7, (HEIGHT/4) * 3 , WIDTH/7, HEIGHT/8, STACK)
+    banker = Banker(STACK, WIDTH/7, (HEIGHT/4) * 3 , WIDTH/7, HEIGHT/8)
+
     """
         three game loop break conditions:
             player broke11
@@ -38,12 +39,11 @@ while game_running:
         wager = take_input("green", screen, WIDTH/2, HEIGHT/2, 100, 40)
         wager_label = Label(str(wager), WIDTH/6*2, (HEIGHT/4) * 3, WIDTH/7, HEIGHT/8)
 
-
-        menus = [name_label, wager_label, hit_button, split_button, stand_button, double_button]
+        menus = [banker, name_label, wager_label, hit_button, split_button, stand_button, double_button]
         if game.deal(wager):
             bust = hitting(game, screen, WIDTH, HEIGHT, menus)
             if not bust:
-                dealer_play(game, screen, WIDTH, HEIGHT, menus[:2])
+                dealer_play(game, screen, WIDTH, HEIGHT, menus[:3])
             else:
                 pass
 
