@@ -37,7 +37,6 @@ while game_running:
         menus = [stack_label, name_label, wager_label, hit_button, split_button, stand_button, double_button]
         if not game.deal(wager):
             bust = hitting(game, screen, WIDTH, HEIGHT, menus)
-            print(bust, "main.py")
             if not bust:
                 dealer_play(game, screen, WIDTH, HEIGHT, menus[:3])
             else:
