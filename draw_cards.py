@@ -1,6 +1,8 @@
 import pygame
 
 def draw_cards(game, screen, width, height, menus):
+    "handles repetitive drawing of playing pieces"
+    
     for i, hand in enumerate(game.player.hands):
             for j, card in enumerate(hand.cards):
                 card.rect = pygame.Rect((i * width/len(game.player.hands)) + (j * 30), height/2, 30, 50)

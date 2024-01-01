@@ -37,7 +37,7 @@ while game_running:
     """
 
     while True:
-        wager = take_input("green", screen, WIDTH/2, HEIGHT/2, 100, 40)
+        wager = int(take_input("green", screen, WIDTH/2, HEIGHT/2, 100, 40))
         wager_label = Label(str(wager), WIDTH/6*2, (HEIGHT/4) * 3, WIDTH/7, HEIGHT/8)
 
         menus = [banker, name_label, wager_label, hit_button, split_button, stand_button, double_button]

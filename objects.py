@@ -45,7 +45,7 @@ class Banker(Label):
         super().__init__(value, x, y, w, h)
 
     def account(self, amount):
-        self.value +- amount
+        self.value = str(int(self.value) + amount)
 
 class Button:
     def __init__(self, name, x, y, w, h, color, on_click):
@@ -195,7 +195,7 @@ class Game:
         
     def deal(self, wager, banker): # re-add wager
         if len(self.deck.cards) != 0:
-            self.player.hands, self.dealer.hands = [Hand(self.deck.draw(), self.deck.draw())], [Hand(self.deck.draw(), self.deck.draw())]
+            self.player.hands, self.dealer.hands = [Hand(self.deck.draw(), self.deck.draw(), wager)], [Hand(self.deck.draw(), self.deck.draw())]
             
             if self.dealer.hands[0].value == 21 and self.player.hands[0].value != 21:
                 print(f'Dealer wins, blackjack')
