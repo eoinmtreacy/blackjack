@@ -29,10 +29,12 @@ def hitting(game, screen, width, height, menus):
             pass
         else:
             # if no hands active but at least one hand not bust
-            if any(list(filter(lambda hand : hand.bust, game.player.hands))):
+            if any(list(filter(lambda hand : hand.bust(), game.player.hands))):
+                print("False")
                 return False
             else:
                 # if all inactive and all bust 
+                print("True")
                 return True
         
         draw_cards(game, screen, width, height, menus)
