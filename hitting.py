@@ -16,10 +16,24 @@ def hitting(game, screen, width, height, menus):
                             if event.unicode == "s" or event.unicode == "S":
                                 game.split()
                                 break
+
+                            # handle doubling: ...if event.unicode == "d" etc 
+                            
                             if event.key == pygame.K_RETURN:
                                 hand.active = False
                                 break
 
+        # while any hands active keep playing
+        if any(list(filter(lambda hand : hand.active, game.player.hands))):
+            pass
+        else:
+            # if not hands active but at least one hand not bust
+            if any(list(filter(lambda hand : hand.bust, game.player.hands))):
+                return False
+            else:
+                # if all inactive and all bust 
+                return True
+        
         for i, hand in enumerate(game.player.hands):
             for j, card in enumerate(hand.cards):
                 card.rect = pygame.Rect((i * width/len(game.player.hands)) + (j * 30), height/2, 30, 50)

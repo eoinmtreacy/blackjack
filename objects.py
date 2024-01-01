@@ -140,6 +140,7 @@ class Hand:
         self.wager = wager
         self.active = active
         
+    @property
     def value(self):
         value = 0
         for card in self.cards:
@@ -151,7 +152,8 @@ class Hand:
         return value
     
     def bust(self):
-        if self.value() > 21:
+        if self.value > 21:
+            self.active = False
             return True
         else:
             return False
@@ -172,7 +174,7 @@ class Game:
     def hit(self, curr_hand):
         hit = self.deck.draw()
         curr_hand.cards += (hit,)
-        print(f'{hit} ({curr_hand.value()})')
+        print(f'{hit} ({curr_hand.value})')
         if curr_hand.bust():
             self.player.stack -= 1
             print("Player bust, dealer wins")
@@ -189,11 +191,11 @@ class Game:
         self.player.add_hand(Hand(self.player.hands[curr_hand].cards[1], self.deck.draw()))
         self.player.hands[curr_hand] = Hand(self.player.hands[curr_hand].cards[0], self.deck.draw())
         
-    def deal(self): # re-add wager
+    def deal(self, wager): # re-add wager
         if len(self.deck.cards) != 0:
             self.player.hands, self.dealer.hands = [Hand(self.deck.draw(), self.deck.draw())], [Hand(self.deck.draw(), self.deck.draw())]
             
-            if self.dealer.hands[0].value() == 21 and self.player.hands[0].value() != 21:
+            if self.dealer.hands[0].value == 21 and self.player.hands[0].value != 21:
                 print(f'Dealer wins, blackjack')
                 # self.player.stack -= wager
                 return True
