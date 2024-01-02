@@ -25,17 +25,17 @@ def hitting(game, screen, width, height, menus):
                                 break
 
         # while any hands active keep playing
-        if any(list(filter(lambda hand : hand.active, game.player.hands))):
+        if any([hand.active for hand in game.player.hands]):
             pass
         else:
-            # if no hands active but at least one hand not bust
-            if any(list(filter(lambda hand : hand.bust(), game.player.hands))):
-                print("False")
-                return False
-            else:
-                # if all inactive and all bust 
+            # all hands.bust == true
+            if all([hand.bust() for hand in game.player.hands]):
                 print("True")
                 return True
+            else:
+                # at least one not bust 
+                print("False")
+                return False
         
         draw_cards(game, screen, width, height, menus)
 
