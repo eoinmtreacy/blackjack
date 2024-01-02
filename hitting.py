@@ -15,7 +15,7 @@ def hitting(game, screen, width, height, menus, banker):
                                 game.hit(hand)
                                 break
                             if event.unicode == "s" or event.unicode == "S":
-                                game.split(banker)
+                                game.split(banker, screen)
                                 break
 
                             # handle doubling: ...if event.unicode == "d" etc 

@@ -29,11 +29,11 @@ class Input:
                 self.img = self.font.render(self.text, True, self.color)
 
 class Label:
-    def __init__(self, value, x, y, w, h):
+    def __init__(self, value, x, y, w, h, font_size=24):
         self.value = value
         self.rect = pygame.Rect(x, y, w, h)
-        self.color = "grey"
-        self.font = pygame.font.Font(None, 24)
+        self.color = "lightgrey"
+        self.font = pygame.font.Font(None, font_size)
         self.img = self.font.render(self.value, True, self.color)
 
     def draw(self, screen):
@@ -138,10 +138,15 @@ class Player:
         self.hands.append(hand)
 
 class Hand:
-    def __init__(self, card1, card2, wager = 0, active = True):
+    def __init__(self, card1, card2, screen, wager = 0, active = True):
         self.cards = (card1, card2)
         self.wager = wager
         self.active = active
+        self.label = Label(str(self.wager), self.cards[0].rect.x, self.cards[0].rect.y - 30, 30, 30, 36)
+        self.screen = screen
+
+    def draw(self):
+        self.label.draw(self.screen)
         
     @property
     def value(self):
@@ -185,7 +190,7 @@ class Game:
         else:
             return 0
         
-    def split(self, banker):
+    def split(self, banker, screen):
         curr_hand = int
         for hand in self.player.hands:
             if hand.active:
@@ -195,17 +200,17 @@ class Game:
         wager = self.player.hands[curr_hand].wager
 
         # create new player hand with second card from splitting hand
-        self.player.add_hand(Hand(self.player.hands[curr_hand].cards[1], self.deck.draw(), wager))
+        self.player.add_hand(Hand(self.player.hands[curr_hand].cards[1], self.deck.draw(), screen, wager))
 
         # knock off new hands wager
         banker.account(-wager)
 
         # replace curr_hand with the hand with same first and new second card 
-        self.player.hands[curr_hand] = Hand(self.player.hands[curr_hand].cards[0], self.deck.draw(), wager)
+        self.player.hands[curr_hand] = Hand(self.player.hands[curr_hand].cards[0], self.deck.draw(), screen, wager)
         
-    def deal(self, wager, banker): # re-add wager
+    def deal(self, wager, banker, screen): # re-add wager
         if len(self.deck.cards) != 0:
-            self.player.hands, self.dealer.hands = [Hand(self.deck.draw(), self.deck.draw(), wager)], [Hand(self.deck.draw(), self.deck.draw())]
+            self.player.hands, self.dealer.hands = [Hand(self.deck.draw(), self.deck.draw(), screen, wager)], [Hand(self.deck.draw(), self.deck.draw(), screen)]
             
             banker.account(-wager)
             

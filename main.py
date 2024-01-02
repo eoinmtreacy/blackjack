@@ -41,7 +41,7 @@ while game_running:
         wager_label = Label(str(wager), WIDTH/6*2, (HEIGHT/4) * 3, WIDTH/7, HEIGHT/8)
 
         menus = [banker, name_label, wager_label, hit_button, split_button, stand_button, double_button]
-        if game.deal(wager, banker):
+        if game.deal(wager, banker, screen):
             bust = hitting(game, screen, WIDTH, HEIGHT, menus, banker)
             if not bust:
                 dealer_play(game, screen, WIDTH, HEIGHT, menus[:3], banker)
