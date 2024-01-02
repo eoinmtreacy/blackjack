@@ -1,7 +1,7 @@
 from objects import * 
 from draw_cards import * 
 
-def hitting(game, screen, width, height, menus):
+def hitting(game, screen, width, height, menus, banker):
     while True:
         screen.fill("darkgreen")
         for event in pygame.event.get():
@@ -15,7 +15,7 @@ def hitting(game, screen, width, height, menus):
                                 game.hit(hand)
                                 break
                             if event.unicode == "s" or event.unicode == "S":
-                                game.split()
+                                game.split(banker)
                                 break
 
                             # handle doubling: ...if event.unicode == "d" etc 

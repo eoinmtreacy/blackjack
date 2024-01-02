@@ -42,7 +42,7 @@ while game_running:
 
         menus = [banker, name_label, wager_label, hit_button, split_button, stand_button, double_button]
         if game.deal(wager, banker):
-            bust = hitting(game, screen, WIDTH, HEIGHT, menus)
+            bust = hitting(game, screen, WIDTH, HEIGHT, menus, banker)
             if not bust:
                 dealer_play(game, screen, WIDTH, HEIGHT, menus[:3], banker)
             settle(game, screen, WIDTH, HEIGHT, menus[:3], banker)

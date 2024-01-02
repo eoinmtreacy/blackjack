@@ -185,14 +185,23 @@ class Game:
         else:
             return 0
         
-    def split(self):
+    def split(self, banker):
         curr_hand = int
         for hand in self.player.hands:
             if hand.active:
                 curr_hand = self.player.hands.index(hand)
                 break
-        self.player.add_hand(Hand(self.player.hands[curr_hand].cards[1], self.deck.draw()))
-        self.player.hands[curr_hand] = Hand(self.player.hands[curr_hand].cards[0], self.deck.draw())
+
+        wager = self.player.hands[curr_hand].wager
+
+        # create new player hand with second card from splitting hand
+        self.player.add_hand(Hand(self.player.hands[curr_hand].cards[1], self.deck.draw(), wager))
+
+        # knock off new hands wager
+        banker.account(-wager)
+
+        # replace curr_hand with the hand with same first and new second card 
+        self.player.hands[curr_hand] = Hand(self.player.hands[curr_hand].cards[0], self.deck.draw(), wager)
         
     def deal(self, wager, banker): # re-add wager
         if len(self.deck.cards) != 0:
