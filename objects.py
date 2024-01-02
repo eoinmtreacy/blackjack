@@ -46,6 +46,7 @@ class Banker(Label):
 
     def account(self, amount):
         self.value = str(int(self.value) + amount)
+        self.img = self.font.render(self.value, True, self.color)
 
 class Button:
     def __init__(self, name, x, y, w, h, color, on_click):

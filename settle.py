@@ -5,8 +5,8 @@ def settle(game, screen, w, h, menus, banker):
     "handles wager and banker methods for each hand in player hands"
 
     for hand in game.player.hands:
+        screen.fill("blue")
         pygame.time.wait(1000) # so player can see what's going on
-        screen.fill("aqua")
         draw_cards(game, screen, w, h, menus)
 
         if hand.bust():

@@ -31,7 +31,7 @@ while game_running:
 
     """
         three game loop break conditions:
-            player broke11
+            player broke
             deck reset
             player quit
     """
