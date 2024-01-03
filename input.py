@@ -13,7 +13,6 @@ def take_input(color, screen, x, y, w, h):
             elif event.type == pygame.KEYDOWN:
                 output = new_input.handle_type(event)
                 if event.key == pygame.K_RETURN:
-                    print(output)
                     return output
 
         new_input.draw(screen)

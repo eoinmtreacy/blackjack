@@ -80,6 +80,8 @@ class Button:
 
 class Card:
     def __init__(self, suit, value, x, y, w=30, h=50):
+        self.x = x
+        self.y = y
         self.suits = ("Clubs", "Diamonds", "Hearts", "Spades")
         self.colors = ("black", "red", "red", "black")
         self.values = (None, "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "Ten", "Jack", "Queen", "King")
@@ -142,7 +144,7 @@ class Hand:
         self.cards = (card1, card2)
         self.wager = wager
         self.active = active
-        self.label = Label(str(self.wager), self.cards[0].rect.x, self.cards[0].rect.y - 30, 30, 30, 36)
+        self.label = Label(str(self.wager), self.cards[0].rect.x, self.cards[0].rect.y - 30, 30, 30, 24)
         self.screen = screen
 
     def draw(self):
@@ -208,10 +210,10 @@ class Game:
         # replace curr_hand with the hand with same first and new second card 
         self.player.hands[curr_hand] = Hand(self.player.hands[curr_hand].cards[0], self.deck.draw(), screen, wager)
         
-    def deal(self, wager, banker, screen): # re-add wager
+    def deal(self, wager, banker, screen):
         if len(self.deck.cards) != 0:
             self.player.hands, self.dealer.hands = [Hand(self.deck.draw(), self.deck.draw(), screen, wager)], [Hand(self.deck.draw(), self.deck.draw(), screen)]
-            
+            print(self.player.hands[0].cards[0].y, self.player.hands[0].cards[0].x)
             banker.account(-wager)
             
             if self.dealer.hands[0].value == 21 and self.player.hands[0].value != 21:
