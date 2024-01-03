@@ -1,8 +1,8 @@
-from objects import *
 from input import *
 from hitting import *
 from dealer_play import *
-from settle import * 
+from settle import *
+from game import Game
 
 WIDTH, HEIGHT = 480, 300
 
@@ -14,6 +14,7 @@ game_running = True
 
 while game_running:
 
+    # these are now in game.take_input
     NAME = take_input("red", screen, WIDTH/2, HEIGHT/2, 100, 40)
     STACK = take_input("blue", screen, WIDTH/2, HEIGHT/2, 100, 40)
 

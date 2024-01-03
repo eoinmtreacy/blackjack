@@ -1,20 +1,26 @@
-from objects import * 
+import pygame
 
-def take_input(color, screen, x, y, w, h):
+class Input:
+    def __init__(self,color,x,y,h,w):
+        self.rect = pygame.Rect(x,y,h,w)
+        self.color = color
+        self.text = ""
+        self.font = pygame.font.Font(None, 24)
+        self.img = self.font.render(self.text, True, self.color)
+        self.active = True
 
-    new_input = Input(color, x, y, w, h)
+    def draw(self, screen):
+        screen.blit(self.img, self.rect.center)
+        pygame.draw.rect(screen,self.color, self.rect, 2)
 
-    while True:
-        screen.fill("grey")
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                game_running = False
-            elif event.type == pygame.KEYDOWN:
-                output = new_input.handle_type(event)
+    def handle_type(self,event):
+        if self.active:
+            if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
-                    return output
-
-        new_input.draw(screen)
-        
-        pygame.display.update()
+                    return self.text
+                elif event.key == pygame.K_BACKSPACE:
+                    self.text = self.text[:-1]
+                else:
+                    self.text += event.unicode
+                # Re-render the text.
+                self.img = self.font.render(self.text, True, self.color)

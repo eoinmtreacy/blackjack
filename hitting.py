@@ -1,4 +1,3 @@
-from objects import * 
 from draw_cards import * 
 
 def hitting(game, screen, width, height, menus, banker):

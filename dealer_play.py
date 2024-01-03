@@ -1,4 +1,3 @@
-from objects import * 
 from draw_cards import * 
 
 def dealer_play(game, screen, width, height, menus, banker):

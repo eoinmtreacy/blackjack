@@ -10,10 +10,10 @@ def draw_cards(game, screen, width, height, menus):
                 card.draw(screen)
                 hand.draw()
 
-    # for menu in menus:
-    #     menu.draw(screen)
+    for menu in menus:
+        menu.draw(screen)
 
-    # for hand in game.dealer.hands:
-    #     for i, card in enumerate(hand.cards):
-    #         card.rect = pygame.Rect(i * 30, 30, 30, 50)
-    #         card.draw(screen)
+    for hand in game.dealer.hands:
+        for i, card in enumerate(hand.cards):
+            card.rect = pygame.Rect(i * 30, 30, 30, 50)
+            card.draw(screen)
