@@ -27,7 +27,7 @@ class Game:
             'double': Button("double", self.width/2 + 150, self.height/4 * 3, 60, 30, "hotpink", "d")
         }
         self.menus = {
-            'stack': Label('420', self.width/6, (self.height/4) * 3, self.width/7, self.height/8),
+            'stack': Label(str(self.stack), self.width/6, (self.height/4) * 3, self.width/7, self.height/8),
             'wager': Label('69', self.width/6*2, (self.height/4) * 3, self.width/7, self.height/8)
         }
     
@@ -35,23 +35,22 @@ class Game:
         while(self._running):
             for event in pygame.event.get():
                 self.on_event(event)
-            self.wager
-            blackjack = self.deal()
+            wager = self.get_wager()
+            blackjack = self.deal(wager)
             if not blackjack:
-                bust = self.hitting()
+                bust = self.hitting(wager)
                 if not bust:
                     self.dealer_play()
-            #self.settle()
+            self.settle()
         self.on_cleanup()
 
     def on_event(self, event):
         if event.type == pygame.QUIT:
             self._running = False
 
-    @property
-    def wager(self):
+    def get_wager(self):
         new_input = Input('green', self.width/8*3, self.height/8*3, self.width/4, self.height/8)
-        
+
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -59,17 +58,18 @@ class Game:
                 elif event.type == pygame.KEYDOWN:
                     output = new_input.handle_type(event)
                     if event.key == pygame.K_RETURN and output != '':
-                        return output
+                        return int(output)
                     
             self._screen.fill("grey")
             new_input.draw(self._screen)
             pygame.display.update()
 
-    def deal(self):
+    def deal(self, wager):
         "first subloop add cards to hands and hands to player and dealer"
         print('deal')
         if len(self.deck.cards) != 0:
-            self.player.hands, self.dealer.hands = [Hand(self.deck.draw(), self.deck.draw())], [Hand(self.deck.draw(), self.deck.draw())]
+            self.player.hands, self.dealer.hands = [Hand(self.deck.draw(), self.deck.draw(), wager)], [Hand(self.deck.draw(), self.deck.draw())]
+            self.account(-wager)
             self.draw()
             
             if self.dealer.hands[0].value == 21 and self.player.hands[0].value != 21:
@@ -86,7 +86,7 @@ class Game:
         else:
             print("Deck is empty")
 
-    def hitting(self):
+    def hitting(self, wager):
         "if not dealer blackjack (peak), await user input"
         print('hitting')
         while True:
@@ -102,11 +102,9 @@ class Game:
                                 self.hit(hand)
                                 break
                             if event.unicode == "s" or event.unicode == "S":
-                                # self.split(banker, screen)
+                                self.split(wager)
                                 break
-
                             # handle doubling: ...if event.unicode == "d" etc 
-                            
                             if event.key == pygame.K_RETURN:
                                 hand.active = False
                                 break
@@ -116,7 +114,7 @@ class Game:
                 pass
             else:
                 # all hands.bust == true
-                if all([hand.bust() for hand in self.player.hands]):
+                if all([hand.bust for hand in self.player.hands]):
                     print("True")
                     return True
                 else:
@@ -137,22 +135,22 @@ class Game:
                 break
 
         print("finished!", self.dealer.hands[0].value)
-        
         pygame.display.update()
         
     def settle(self):
         "for each player hands settles up with dealer"
         print("settle")
+
         for hand in self.player.hands:
             self.draw()
 
-            if hand.bust():
+            if hand.bust:
                 print(f'Hand busted, you lose {hand.wager}')
 
-            elif self.dealer.hands[0].bust():
+            elif self.dealer.hands[0].bust:
                 print(f'Dealer bust, hand wins {hand.wager}')
-
                 self.account(hand.wager * 2)
+
             elif self.dealer.hands[0].value > hand.value:
                 print(f'Dealer wins, you lose {hand.wager}')
 
@@ -169,31 +167,26 @@ class Game:
         hit = self.deck.draw()
         curr_hand.cards += (hit,)
         print(f'{hit} ({curr_hand.value})')
-        if curr_hand.bust():
-            # Banker accounting
-            print("Player bust, dealer wins")
-            return 1
-        else:
-            return 0
+        return True if curr_hand.bust else False
         
-    def split(self, banker, screen):
+    def split(self, wager):
         curr_hand = int
         for hand in self.player.hands:
             if hand.active:
                 curr_hand = self.player.hands.index(hand)
                 break
 
-        wager = self.player.hands[curr_hand].wager
         # create new player hand with second card from splitting hand
-        self.player.add_hand(Hand(self.player.hands[curr_hand].cards[1], self.deck.draw(), screen, wager))
+        self.player.add_hand(Hand(self.player.hands[curr_hand].cards[1], self.deck.draw(), wager))
         # knock off new hands wager
-        banker.account(-wager)
+        self.account(-wager)
         # replace curr_hand with the hand with same first and new second card 
-        self.player.hands[curr_hand] = Hand(self.player.hands[curr_hand].cards[0], self.deck.draw(), screen, wager)
+        self.player.hands[curr_hand] = Hand(self.player.hands[curr_hand].cards[0], self.deck.draw(), wager)
     
     def account(self, amount):
-        self.value = str(int(self.value) + amount)
-        self.img = self.font.render(self.value, True, self.color)
+        "handles settling arithmetic and passing updated stack to menu label"
+        self.stack += amount
+        self.menus['stack'] = Label(str(self.stack), self.width/6, (self.height/4) * 3, self.width/7, self.height/8)
 
     def draw(self):
         "called in each subloop: deal, hitting etc."

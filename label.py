@@ -11,3 +11,6 @@ class Label:
     def draw(self, screen):
         screen.blit(self.img, self.rect.center)
         pygame.draw.rect(screen, self.color, self.rect, 2)
+
+    def update(self, new):
+        self.value = new
