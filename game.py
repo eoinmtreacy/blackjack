@@ -30,27 +30,6 @@ class Game:
             'wager': Label('69', self.width/6*2, (self.height/4) * 3, self.width/7, self.height/8)
         }
     
-    def draw(self):
-        "called in each subloop: deal, hitting etc."
-        self._screen.fill("darkgreen")
-        for i, hand in enumerate(self.player.hands):
-                for j, card in enumerate(hand.cards):
-                    card.rect = pygame.Rect((i * self.width/len(self.player.hands)) + (j * 30), self.height/2, 30, 50)
-                    card.draw(self._screen)
-
-        for menu in self.menus.values():
-            menu.draw(self._screen)
-
-        for button in self.buttons.values():
-            button.draw(self._screen)
-
-        for hand in self.dealer.hands:
-            for i, card in enumerate(hand.cards):
-                card.rect = pygame.Rect(i * 30, 30, 30, 50)
-                card.draw(self._screen)
-
-        pygame.display.update()
-
     def on_execute(self):
         while(self._running):
             for event in pygame.event.get():
@@ -124,10 +103,7 @@ class Game:
 
     def dealer_play(self):
         while True:
-            self.screen.fill('pink')
             self.draw()
-            pygame.display.update()
-            pygame.time.wait(1000)
             
             if self.dealer.hands[0].value < 17:
                 hit = self.deck.draw()
@@ -143,8 +119,6 @@ class Game:
         "handles wager and banker methods for each hand in player hands"
 
         for hand in self.player.hands:
-            self.screen.fill("blue")
-            pygame.time.wait(1000) # so player can see what's going on
             self.draw()
 
             if hand.bust():
@@ -195,30 +169,6 @@ class Game:
         # replace curr_hand with the hand with same first and new second card 
         self.player.hands[curr_hand] = Hand(self.player.hands[curr_hand].cards[0], self.deck.draw(), screen, wager)
         
-    def dealerPlay(self):
-        print(f'Dealer has', end = ' ')
-        for card in self.dealer.hands[0].cards:
-            print(card, end=" ")
-        print(f'({self.dealer.hands[0].value()})')
-
-        while 17 > self.dealer.hands[0].value():
-            hit = self.deck.draw()
-            self.dealer.hands[0].cards += (hit,)
-            print(f'{hit} ({self.dealer.hands[0].value()})')
-
-        for hand in self.player.hands:
-            if self.dealer.hands[0].value() > 21:
-                print(f"Dealer busts, you win {hand.wager}")
-                self.player.stack += hand.wager
-            elif self.dealer.hands[0].value() > hand.value():
-                print(f"Dealer wins, you lose {hand.wager}")
-                self.player.stack -= hand.wager
-            elif self.dealer.hands[0].value() == hand.value():
-                print("Push")
-            else:
-                print(f"You win {hand.wager}")
-                self.player.stack += hand.wager
-
 
 
     def take_input(color, screen, x, y, w, h):
@@ -241,6 +191,28 @@ class Game:
     def account(self, amount):
         self.value = str(int(self.value) + amount)
         self.img = self.font.render(self.value, True, self.color)
+
+    def draw(self):
+        "called in each subloop: deal, hitting etc."
+        self._screen.fill("darkgreen")
+        for i, hand in enumerate(self.player.hands):
+                for j, card in enumerate(hand.cards):
+                    card.rect = pygame.Rect((i * self.width/len(self.player.hands)) + (j * 30), self.height/2, 30, 50)
+                    card.draw(self._screen)
+
+        for hand in self.dealer.hands:
+            for i, card in enumerate(hand.cards):
+                card.rect = pygame.Rect(i * 30, 30, 30, 50)
+                card.draw(self._screen)
+
+        for menu in self.menus.values():
+            menu.draw(self._screen)
+
+        for button in self.buttons.values():
+            button.draw(self._screen)
+
+        pygame.display.update()
+        pygame.time.wait(1000)
 
     def on_cleanup(self):
         pygame.quit()
