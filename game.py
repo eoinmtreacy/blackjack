@@ -28,7 +28,7 @@ class Game:
     def __init__(self):
         pygame.init()
         self.size = self.width, self.height = 480, 300
-        self._display_surf = pygame.display.set_mode((self.size))
+        self._screen = pygame.display.set_mode((self.size))
         self._running = True
         self.player = Player("Player")
         self.dealer = Player("Dealer")
@@ -46,21 +46,24 @@ class Game:
     
     def draw(self):
         "handles drawing of playing pieces"
+        self._screen.fill("darkgreen")
         for i, hand in enumerate(self.player.hands):
                 for j, card in enumerate(hand.cards):
                     card.rect = pygame.Rect((i * self.width/len(self.player.hands)) + (j * 30), self.height/2, 30, 50)
-                    card.draw(self._display_surf)
+                    card.draw(self._screen)
 
         for menu in self.menus.values():
-            menu.draw(self._display_surf)
+            menu.draw(self._screen)
 
         for button in self.buttons.values():
-            button.draw(self._display_surf)
+            button.draw(self._screen)
 
         for hand in self.dealer.hands:
             for i, card in enumerate(hand.cards):
                 card.rect = pygame.Rect(i * 30, 30, 30, 50)
-                card.draw(self._display_surf)
+                card.draw(self._screen)
+
+        pygame.display.update()
 
     def on_execute(self):
         while(self._running):
