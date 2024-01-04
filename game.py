@@ -20,7 +20,7 @@ from banker import Banker
 # STACK = take_input("blue", screen, WIDTH/2, HEIGHT/2, 100, 40)
 
 # wager = int(take_input("green", screen, WIDTH/2, HEIGHT/2, 100, 40))
-# wager_label = Label(str(wager), WIDTH/6*2, (HEIGHT/4) * 3, WIDTH/7, HEIGHT/8)
+
 
 # menus = [banker, name_label, wager_label, hit_button, split_button, stand_button, double_button]
 
@@ -39,14 +39,17 @@ class Game:
             'stand': Button("stand", self.width/2 + 90, self.height/4 * 3, 60, 30, "grey", " "),
             'double': Button("double", self.width/2 + 150, self.height/4 * 3, 60, 30, "hotpink", "d")
         }
+        self.menus = {
+            'stack': Label('420', self.width/6, (self.height/4) * 3, self.width/7, self.height/8),
+            'wager': Label('69', self.width/6*2, (self.height/4) * 3, self.width/7, self.height/8)
+        }
     
     def draw(self):
         "handles drawing of playing pieces"
         for i, hand in enumerate(self.player.hands):
                 for j, card in enumerate(hand.cards):
                     card.rect = pygame.Rect((i * self.width/len(self.player.hands)) + (j * 30), self.height/2, 30, 50)
-                    card.draw(self.screen)
-                    hand.draw()
+                    card.draw(self._display_surf)
 
         for menu in self.menus:
             menu.draw(self.screen)

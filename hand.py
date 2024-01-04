@@ -1,15 +1,11 @@
 from label import Label
 
 class Hand:
-    def __init__(self, card1, card2, screen, wager = 0, active = True):
+    def __init__(self, card1, card2, wager = 0, active = True):
         self.cards = (card1, card2)
         self.wager = wager
         self.active = active
         self.label = Label(str(self.wager), self.cards[0].rect.x, self.cards[0].rect.y - 30, 30, 30, 24)
-        self.screen = screen
-
-    def draw(self):
-        self.label.draw(self.screen)
         
     @property
     def value(self):
@@ -32,5 +28,5 @@ class Hand:
     def bet(self, wager):
         self.wager = wager
 
-    def __str__(self):
+    def __repr__(self):
         return (f'{self.cards[0]} {self.cards[1]}')
