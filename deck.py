@@ -8,6 +8,7 @@ class Deck:
                 for v in range(1,14):
                     newCard = card(s, v, 0, 0)
                     self.cards.append(newCard)
+        self.shuffle()
         
     def draw(self):
         try:

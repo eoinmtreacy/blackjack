@@ -1,18 +1,171 @@
 import pygame
+from pygame.locals import * 
 
+from button import Button
 from player import Player
 from deck import Deck
 from hand import Hand
 from card import Card
 from input import Input
+from label import Label
+from banker import Banker
+
+# name_label = Label(NAME, 0, (HEIGHT/4) * 3 , WIDTH/7, HEIGHT/8)
+
+
+
+# banker = Banker(STACK, WIDTH/7, (HEIGHT/4) * 3 , WIDTH/7, HEIGHT/8)
+
+# NAME = take_input("red", screen, WIDTH/2, HEIGHT/2, 100, 40)
+# STACK = take_input("blue", screen, WIDTH/2, HEIGHT/2, 100, 40)
+
+# wager = int(take_input("green", screen, WIDTH/2, HEIGHT/2, 100, 40))
+# wager_label = Label(str(wager), WIDTH/6*2, (HEIGHT/4) * 3, WIDTH/7, HEIGHT/8)
+
+# menus = [banker, name_label, wager_label, hit_button, split_button, stand_button, double_button]
 
 class Game:
-    def __init__(self, player, decks):
-        self.player = Player(player)
+    def __init__(self):
+        pygame.init()
+        self.size = self.width, self.height = 480, 300
+        self._display_surf = pygame.display.set_mode((self.size))
+        self._running = True
+        self.player = Player("Player")
         self.dealer = Player("Dealer")
-        self.deck = Deck(Card, decks)
-        self.deck.shuffle()
+        self.deck = Deck(Card,8)
+        self.buttons = {
+            'hit': Button("hit", self.width/2, self.height/4 * 3, 30, 30, "red", "h"),
+            'split': Button("split", self.width/2 + 30, self.height/4 * 3, 60, 30, "yellow", "s"),
+            'stand': Button("stand", self.width/2 + 90, self.height/4 * 3, 60, 30, "grey", " "),
+            'double': Button("double", self.width/2 + 150, self.height/4 * 3, 60, 30, "hotpink", "d")
+        }
+    
+    def draw(self):
+        "handles drawing of playing pieces"
+        for i, hand in enumerate(self.player.hands):
+                for j, card in enumerate(hand.cards):
+                    card.rect = pygame.Rect((i * self.width/len(self.player.hands)) + (j * 30), self.height/2, 30, 50)
+                    card.draw(self.screen)
+                    hand.draw()
+
+        for menu in self.menus:
+            menu.draw(self.screen)
+
+        for hand in self.dealer.hands:
+            for i, card in enumerate(hand.cards):
+                card.rect = pygame.Rect(i * 30, 30, 30, 50)
+                card.draw(self.screen)
+
+    def on_execute(self):
+        while(self._running):
+            for event in pygame.event.get():
+                self.on_event(event)
+            blackjack = self.deal()
+            if not blackjack:
+                bust = self.hitting()
+                if not bust:
+                    self.dealer_play()
+            self.settle()
+        self.on_cleanup()
+
+    def on_event(self, event):
+        if event.type == pygame.QUIT:
+            self._running = False
+
+    def deal(self):
+        if len(self.deck.cards) != 0:
+            self.player.hands, self.dealer.hands = [Hand(self.deck.draw(), self.deck.draw())], [Hand(self.deck.draw(), self.deck.draw())]
+            self.draw()
+            input("Let's see")
+            
+            # if self.dealer.hands[0].value == 21 and self.player.hands[0].value != 21:
+            #     print(f'Dealer wins, blackjack')
+            #     return False
+            # else:
+            #     return True
+        else:
+            print("Deck is empty")
+
+    def hitting(game, screen, width, height, menus, banker):
+        while True:
+            screen.fill("darkgreen")
+            for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        game_running = False
+                        break
+                    for hand in game.player.hands:
+                        if hand.active: 
+                            if event.type == pygame.KEYDOWN:
+                                if event.unicode == "h" or event.unicode == "H":
+                                    game.hit(hand)
+                                    break
+                                if event.unicode == "s" or event.unicode == "S":
+                                    game.split(banker, screen)
+                                    break
+
+                                # handle doubling: ...if event.unicode == "d" etc 
+                                
+                                if event.key == pygame.K_RETURN:
+                                    hand.active = False
+                                    break
+
+    def dealer_play(self):
+        while True:
+            self.screen.fill('pink')
+            self.draw()
+            pygame.display.update()
+            pygame.time.wait(1000)
+            
+            if self.dealer.hands[0].value < 17:
+                hit = self.deck.draw()
+                self.dealer.hands[0].cards += (hit,)
+            else:
+                break
+
+        print("finished!", self.dealer.hands[0].value)
+        # while any hands active keep playing
+        if any([hand.active for hand in self.player.hands]):
+            pass
+        else:
+            # all hands.bust == true
+            if all([hand.bust() for hand in self.player.hands]):
+                print("True")
+                return True
+            else:
+                # at least one not bust 
+                print("False")
+                return False
         
+        self.draw()
+        pygame.display.update()
+        
+    def settle(self):
+        "handles wager and banker methods for each hand in player hands"
+
+        for hand in self.player.hands:
+            self.screen.fill("blue")
+            pygame.time.wait(1000) # so player can see what's going on
+            self.draw()
+
+            if hand.bust():
+                print(f'Hand busted, you lose {hand.wager}')
+
+            elif self.dealer.hands[0].bust():
+                print(f'Dealer bust, hand wins {hand.wager}')
+
+                self.account(hand.wager * 2)
+            elif self.dealer.hands[0].value > hand.value:
+                print(f'Dealer wins, you lose {hand.wager}')
+
+            elif hand.value > self.dealer.hands[0].value:
+                print(f'Hand holds, you win {hand.wager}')
+                self.account(hand.wager * 2)
+
+            else:
+                print('Push')
+                self.account(hand.wager)
+
+
     def hit(self, curr_hand):
         hit = self.deck.draw()
         curr_hand.cards += (hit,)
@@ -42,30 +195,6 @@ class Game:
         # replace curr_hand with the hand with same first and new second card 
         self.player.hands[curr_hand] = Hand(self.player.hands[curr_hand].cards[0], self.deck.draw(), screen, wager)
         
-    def deal(self, wager, banker, screen):
-        if len(self.deck.cards) != 0:
-            self.player.hands, self.dealer.hands = [Hand(self.deck.draw(), self.deck.draw(), screen, wager)], [Hand(self.deck.draw(), self.deck.draw(), screen)]
-            print(self.player.hands[0].cards[0].y, self.player.hands[0].cards[0].x)
-            banker.account(-wager)
-            
-            if self.dealer.hands[0].value == 21 and self.player.hands[0].value != 21:
-                print(f'Dealer wins, blackjack')
-
-                return False
-            
-            else:
-                return True
-            
-        else:
-            print("Deck is empty")
-
-    def read_hand(self, hand):
-        print(f"{self.player.name} has", end = " ")
-        for card in hand.cards:
-            print(card, end = " ")
-        print(f'({hand.value()})')
-        
-        
     def dealerPlay(self):
         print(f'Dealer has', end = ' ')
         for card in self.dealer.hands[0].cards:
@@ -90,10 +219,10 @@ class Game:
                 print(f"You win {hand.wager}")
                 self.player.stack += hand.wager
 
+
+
     def take_input(color, screen, x, y, w, h):
-
         new_input = Input(color, x, y, w, h)
-
         while True:
             screen.fill("grey")
 
@@ -108,3 +237,10 @@ class Game:
             new_input.draw(screen)
             
             pygame.display.update()
+    
+    def account(self, amount):
+        self.value = str(int(self.value) + amount)
+        self.img = self.font.render(self.value, True, self.color)
+
+    def on_cleanup(self):
+        pygame.quit()

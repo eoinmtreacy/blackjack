@@ -1,51 +1,24 @@
 from input import *
 from hitting import *
-from dealer_play import *
 from settle import *
 from game import Game
 
-WIDTH, HEIGHT = 480, 300
+"""
+game init
 
-pygame.init()
+    game.wager()
+    game.deal()
 
-screen = pygame.display.set_mode((WIDTH,HEIGHT))
+    game.hitting()
+        game.draw
+    game.dealerplay
+        game.draw()
+    game.settle()
+        game.draw()
 
-game_running = True
 
-while game_running:
+"""
 
-    # these are now in game.take_input
-    NAME = take_input("red", screen, WIDTH/2, HEIGHT/2, 100, 40)
-    STACK = take_input("blue", screen, WIDTH/2, HEIGHT/2, 100, 40)
-
-    # game object takes player name, stack and no. of decks
-    game = Game(NAME, 1)
-
-    name_label = Label(NAME, 0, (HEIGHT/4) * 3 , WIDTH/7, HEIGHT/8)
-
-    hit_button = Button("hit", WIDTH/2, HEIGHT/4 * 3, 30, 30, "red", "h")
-    split_button = Button("split", WIDTH/2 + 30, HEIGHT/4 * 3, 60, 30, "yellow", "s")
-    stand_button = Button("stand", WIDTH/2 + 90, HEIGHT/4 * 3, 60, 30, "grey", " ")
-    double_button = Button("double", WIDTH/2 + 150, HEIGHT/4 * 3, 60, 30, "hotpink", "d")
-    
-    banker = Banker(STACK, WIDTH/7, (HEIGHT/4) * 3 , WIDTH/7, HEIGHT/8)
-
-    """
-        three game loop break conditions:
-            player broke
-            deck reset
-            player quit
-    """
-
-    while True:
-        wager = int(take_input("green", screen, WIDTH/2, HEIGHT/2, 100, 40))
-        wager_label = Label(str(wager), WIDTH/6*2, (HEIGHT/4) * 3, WIDTH/7, HEIGHT/8)
-
-        menus = [banker, name_label, wager_label, hit_button, split_button, stand_button, double_button]
-        if game.deal(wager, banker, screen):
-            bust = hitting(game, screen, WIDTH, HEIGHT, menus, banker)
-            if not bust:
-                dealer_play(game, screen, WIDTH, HEIGHT, menus[:3], banker)
-            settle(game, screen, WIDTH, HEIGHT, menus[:3], banker)
-
-pygame.quit()
+if __name__ == "__main__" :
+    game = Game()
+    game.on_execute()

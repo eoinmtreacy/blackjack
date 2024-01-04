@@ -1,10 +1,5 @@
-from label import *
-
-class Banker(Label):
-    def __init__(self, value, x, y, w, h):
-        super().__init__(value, x, y, w, h)
-
-    
+import pygame
+import time
 
 class Button:
     def __init__(self, name, x, y, w, h, color, on_click):
@@ -33,5 +28,5 @@ class Button:
         pos = pygame.mouse.get_pos()
         if self.rect.collidepoint(pos):
             if pygame.mouse.get_pressed(num_buttons=3)[0]:
-                pygame.time.wait(250)
-                self.handle_click()
+                time.sleep(0.25)
+                self.handle_click() 

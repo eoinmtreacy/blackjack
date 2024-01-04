@@ -1,4 +1,5 @@
 import pygame
+from pygame.locals import *
 
 class Card:
     def __init__(self, suit, value, x, y, w=30, h=50):
