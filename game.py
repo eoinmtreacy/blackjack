@@ -17,6 +17,7 @@ class Game:
         self._screen = pygame.display.set_mode((self.size))
         self._running = True
         self.player = Player("Player")
+        self.stack = 1000 #stack tied to game, not player, up for debate, not sure if more than one player in needed
         self.dealer = Player("Dealer")
         self.deck = Deck(Card,8)
         self.buttons = {
@@ -39,7 +40,7 @@ class Game:
                 bust = self.hitting()
                 if not bust:
                     self.dealer_play()
-            self.settle()
+            #self.settle()
         self.on_cleanup()
 
     def on_event(self, event):
@@ -53,15 +54,19 @@ class Game:
             self.player.hands, self.dealer.hands = [Hand(self.deck.draw(), self.deck.draw())], [Hand(self.deck.draw(), self.deck.draw())]
             self.draw()
             
-            # if self.dealer.hands[0].value == 21 and self.player.hands[0].value != 21:
-            #     print(f'Dealer wins, blackjack')
-            #     return False
-            # else:
-            #     return True
+            if self.dealer.hands[0].value == 21 and self.player.hands[0].value != 21:
+                print(f'Blackjack, dealer wins')
+                return True
+            elif self.dealer.hands[0].value != 21 and self.player.hands[0].value == 21:
+                print(f'Player blackjack, you lucky duck')
+                return True
+            elif self.dealer.hands[0].value == 21 and self.player.hands[0].value == 21:
+                print(f'Both dealt blackjack (...what are the odds... about 0.22% at an even cout)')
+                return True
+            else:
+                return False
         else:
             print("Deck is empty")
-
-        return False # conditions later to reset deck halfway
 
     def hitting(self):
         "if not dealer blackjack (peak), await user input"
@@ -102,6 +107,8 @@ class Game:
                     return False
 
     def dealer_play(self):
+        "dealer stands on 17 otherwise hits"
+        print('dealer_play')
         while True:
             self.draw()
             
@@ -116,8 +123,8 @@ class Game:
         pygame.display.update()
         
     def settle(self):
-        "handles wager and banker methods for each hand in player hands"
-
+        "for each player hands settles up with dealer"
+        print("settle")
         for hand in self.player.hands:
             self.draw()
 
