@@ -45,7 +45,7 @@ class Game:
         }
     
     def draw(self):
-        "handles drawing of playing pieces"
+        "called in each subloop: deal, hitting etc."
         self._screen.fill("darkgreen")
         for i, hand in enumerate(self.player.hands):
                 for j, card in enumerate(hand.cards):
@@ -82,10 +82,11 @@ class Game:
             self._running = False
 
     def deal(self):
+        "first subloop add cards to hands and hands to player and dealer"
+        print('deal')
         if len(self.deck.cards) != 0:
             self.player.hands, self.dealer.hands = [Hand(self.deck.draw(), self.deck.draw())], [Hand(self.deck.draw(), self.deck.draw())]
             self.draw()
-            input("Let's see")
             
             # if self.dealer.hands[0].value == 21 and self.player.hands[0].value != 21:
             #     print(f'Dealer wins, blackjack')
@@ -95,28 +96,32 @@ class Game:
         else:
             print("Deck is empty")
 
-    def hitting(game, screen, width, height, menus, banker):
-        while True:
-            screen.fill("darkgreen")
-            for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        game_running = False
-                        break
-                    for hand in game.player.hands:
-                        if hand.active: 
-                            if event.type == pygame.KEYDOWN:
-                                if event.unicode == "h" or event.unicode == "H":
-                                    game.hit(hand)
-                                    break
-                                if event.unicode == "s" or event.unicode == "S":
-                                    game.split(banker, screen)
-                                    break
+        return False # conditions later to reset deck halfway
 
-                                # handle doubling: ...if event.unicode == "d" etc 
-                                
-                                if event.key == pygame.K_RETURN:
-                                    hand.active = False
-                                    break
+    def hitting(self):
+        "if not dealer blackjack (peak), await user input"
+        print('hitting')
+        while True:
+            self.draw()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    game_running = False
+                    break
+                for hand in self.player.hands:
+                    if hand.active: 
+                        if event.type == pygame.KEYDOWN:
+                            if event.unicode == "h" or event.unicode == "H":
+                                self.hit(hand)
+                                break
+                            if event.unicode == "s" or event.unicode == "S":
+                                # self.split(banker, screen)
+                                break
+
+                            # handle doubling: ...if event.unicode == "d" etc 
+                            
+                            if event.key == pygame.K_RETURN:
+                                hand.active = False
+                                break
 
     def dealer_play(self):
         while True:
