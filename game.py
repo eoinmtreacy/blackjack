@@ -35,6 +35,7 @@ class Game:
         while(self._running):
             for event in pygame.event.get():
                 self.on_event(event)
+            self.wager
             blackjack = self.deal()
             if not blackjack:
                 bust = self.hitting()
@@ -46,6 +47,23 @@ class Game:
     def on_event(self, event):
         if event.type == pygame.QUIT:
             self._running = False
+
+    @property
+    def wager(self):
+        new_input = Input('green', self.width/8*3, self.height/8*3, self.width/4, self.height/8)
+        
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    game_running = False
+                elif event.type == pygame.KEYDOWN:
+                    output = new_input.handle_type(event)
+                    if event.key == pygame.K_RETURN and output != '':
+                        return output
+                    
+            self._screen.fill("grey")
+            new_input.draw(self._screen)
+            pygame.display.update()
 
     def deal(self):
         "first subloop add cards to hands and hands to player and dealer"
@@ -166,34 +184,12 @@ class Game:
                 break
 
         wager = self.player.hands[curr_hand].wager
-
         # create new player hand with second card from splitting hand
         self.player.add_hand(Hand(self.player.hands[curr_hand].cards[1], self.deck.draw(), screen, wager))
-
         # knock off new hands wager
         banker.account(-wager)
-
         # replace curr_hand with the hand with same first and new second card 
         self.player.hands[curr_hand] = Hand(self.player.hands[curr_hand].cards[0], self.deck.draw(), screen, wager)
-        
-
-
-    def take_input(color, screen, x, y, w, h):
-        new_input = Input(color, x, y, w, h)
-        while True:
-            screen.fill("grey")
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    game_running = False
-                elif event.type == pygame.KEYDOWN:
-                    output = new_input.handle_type(event)
-                    if event.key == pygame.K_RETURN:
-                        return output
-
-            new_input.draw(screen)
-            
-            pygame.display.update()
     
     def account(self, amount):
         self.value = str(int(self.value) + amount)

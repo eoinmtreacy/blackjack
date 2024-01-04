@@ -4,8 +4,6 @@ class Banker(Label):
     def __init__(self, value, x, y, w, h):
         super().__init__(value, x, y, w, h)
 
-    
-
 class Button:
     def __init__(self, name, x, y, w, h, color, on_click):
         self.name = name
