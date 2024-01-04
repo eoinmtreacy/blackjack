@@ -51,13 +51,16 @@ class Game:
                     card.rect = pygame.Rect((i * self.width/len(self.player.hands)) + (j * 30), self.height/2, 30, 50)
                     card.draw(self._display_surf)
 
-        for menu in self.menus:
-            menu.draw(self.screen)
+        for menu in self.menus.values():
+            menu.draw(self._display_surf)
+
+        for button in self.buttons.values():
+            button.draw(self._display_surf)
 
         for hand in self.dealer.hands:
             for i, card in enumerate(hand.cards):
                 card.rect = pygame.Rect(i * 30, 30, 30, 50)
-                card.draw(self.screen)
+                card.draw(self._display_surf)
 
     def on_execute(self):
         while(self._running):
