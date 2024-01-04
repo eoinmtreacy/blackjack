@@ -10,20 +10,6 @@ from input import Input
 from label import Label
 from banker import Banker
 
-# name_label = Label(NAME, 0, (HEIGHT/4) * 3 , WIDTH/7, HEIGHT/8)
-
-
-
-# banker = Banker(STACK, WIDTH/7, (HEIGHT/4) * 3 , WIDTH/7, HEIGHT/8)
-
-# NAME = take_input("red", screen, WIDTH/2, HEIGHT/2, 100, 40)
-# STACK = take_input("blue", screen, WIDTH/2, HEIGHT/2, 100, 40)
-
-# wager = int(take_input("green", screen, WIDTH/2, HEIGHT/2, 100, 40))
-
-
-# menus = [banker, name_label, wager_label, hit_button, split_button, stand_button, double_button]
-
 class Game:
     def __init__(self):
         pygame.init()
@@ -123,6 +109,19 @@ class Game:
                                 hand.active = False
                                 break
 
+            # while any hands active keep playing
+            if any([hand.active for hand in self.player.hands]):
+                pass
+            else:
+                # all hands.bust == true
+                if all([hand.bust() for hand in self.player.hands]):
+                    print("True")
+                    return True
+                else:
+                    # at least one not bust 
+                    print("False")
+                    return False
+
     def dealer_play(self):
         while True:
             self.screen.fill('pink')
@@ -137,20 +136,7 @@ class Game:
                 break
 
         print("finished!", self.dealer.hands[0].value)
-        # while any hands active keep playing
-        if any([hand.active for hand in self.player.hands]):
-            pass
-        else:
-            # all hands.bust == true
-            if all([hand.bust() for hand in self.player.hands]):
-                print("True")
-                return True
-            else:
-                # at least one not bust 
-                print("False")
-                return False
         
-        self.draw()
         pygame.display.update()
         
     def settle(self):
