@@ -1,2 +1,4 @@
 todo.md
-./__pycache__
+/__pycache__
+/bugs.md
+redund_dealer_play.py
