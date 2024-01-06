@@ -25,7 +25,7 @@ class Game:
             'stand': Button("stand", self.width/2 + 90, self.height/4 * 3, 60, 30, "grey", " "),
             'double': Button("double", self.width/2 + 150, self.height/4 * 3, 60, 30, "hotpink", "d")
         }
-        self.menus = {
+        self.labels = {
             'stack': Label(str(self.stack), self.width/6, (self.height/4) * 3, self.width/7, self.height/8),
             'wager': Label('69', self.width/6*2, (self.height/4) * 3, self.width/7, self.height/8)
         }
@@ -162,7 +162,7 @@ class Game:
         for hand in self.player.hands:
             self.draw()
             pygame.time.wait(1000)
-            
+
             if hand.bust:
                 print(f'Hand busted, you lose {hand.wager}')
 
@@ -206,9 +206,9 @@ class Game:
         self.player.hands[curr_hand] = Hand(self.player.hands[curr_hand].cards[0], self.deck.draw(), wager)
     
     def account(self, amount):
-        "handles settling arithmetic and passing updated stack to menu label"
+        "handles settling arithmetic and passing updated stack labels"
         self.stack += amount
-        self.menus['stack'] = Label(str(self.stack), self.width/6, (self.height/4) * 3, self.width/7, self.height/8)
+        self.labels['stack'] = Label(str(self.stack), self.width/6, (self.height/4) * 3, self.width/7, self.height/8)
 
     def draw(self):
         "called in each subloop: deal, hitting etc."
@@ -223,8 +223,8 @@ class Game:
                 card.rect = pygame.Rect(i * 30, 30, 30, 50)
                 card.draw(self._screen)
 
-        for menu in self.menus.values():
-            menu.draw(self._screen)
+        for label in self.labels.values():
+            label.draw(self._screen)
 
         for button in self.buttons.values():
             button.draw(self._screen)

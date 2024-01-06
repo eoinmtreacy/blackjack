@@ -5,11 +5,10 @@ class Hand:
         self.cards = (card1, card2)
         self.wager = wager
         self.active = active
-        self.label = Label(str(self.wager), self.cards[0].rect.x, self.cards[0].rect.y - 30, 30, 30, 24)
 
     def __repr__(self):
         return (f'{self.cards[0]} {self.cards[1]}')
-        
+    
     @property
     def value(self):
         value = 0
