@@ -16,7 +16,7 @@ class Hand:
     
     def draw(self, screen, card_w, card_h):
         # screen.blit(self.img, self.rect.center) -- may need to blit later but okay for now
-        draw.rect(screen, self.color, self.rect, 2)
+        # draw.rect(screen, self.color, self.rect, 2)
         if self.wager: # stops wager label drawing on dealer cards
             self.label.rect = Rect(self.rect.x, self.rect.y - card_w, card_w, card_w)
             self.label.draw(screen)

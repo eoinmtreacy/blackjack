@@ -27,8 +27,7 @@ class Game:
             'double': Button("double", self.width/2 + 150, self.height/4 * 3, 60, 30, "hotpink", "d")
         }
         self.labels = {
-            'stack': Label(str(self.stack), self.width/6, (self.height/4) * 3, self.width/7, self.height/8),
-            'wager': Label('69', self.width/6*2, (self.height/4) * 3, self.width/7, self.height/8)
+            'stack': Label(str(self.stack), self.width/6, (self.height/4) * 3, self.width/7, self.height/8)
         }
     
     def on_execute(self):
@@ -155,7 +154,6 @@ class Game:
                 self.dealer.hands[0].cards += (hit,)
             else:
                 break
-
         
     def settle(self):
         "for each player hands settles up with dealer"
@@ -185,7 +183,6 @@ class Game:
             else:
                 print('Push')
                 self.account(hand.wager)
-
 
     def hit(self, curr_hand):
         hit = self.deck.draw()
@@ -219,6 +216,13 @@ class Game:
         for i, hand in enumerate(self.player.hands):
             hand.rect = pygame.Rect(i * self.width/len(self.player.hands), self.height/2, 50, 50)
             hand.draw(self._screen, self.card_w, self.card_h)
+
+        for hand in self.player.hands: # focus on active hand
+            if hand.active:
+                focus = pygame.Rect(hand.rect.x - 2, hand.rect.y - 2, 4 + (len(hand.cards) * self.card_w), 4 + self.card_h)
+                pygame.draw.rect(self._screen, color="yellow", rect=focus, width=2)
+                break
+
 
         for hand in self.dealer.hands:
             hand.rect = pygame.Rect(0, self.height/8, 50, 50)
