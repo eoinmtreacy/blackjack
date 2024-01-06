@@ -13,7 +13,7 @@ class Input:
         screen.blit(self.img, self.rect.center)
         pygame.draw.rect(screen, self.color, self.rect, 2)
 
-    def handle_type(self,event):
+    def handle_type(self,event, screen):
         if self.active:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
@@ -24,3 +24,4 @@ class Input:
                     self.text += event.unicode
                 # Re-render the text.
                 self.img = self.font.render(self.text, True, self.color)
+                self.draw(screen)

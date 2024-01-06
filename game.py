@@ -49,18 +49,22 @@ class Game:
 
     def get_wager(self):
         new_input = Input('green', self.width/8*3, self.height/8*3, self.width/4, self.height/8)
+        self.draw()
+        new_input.draw(self._screen)
+        pygame.display.update()
 
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     game_running = False
                 elif event.type == pygame.KEYDOWN:
-                    output = new_input.handle_type(event)
+                    output = new_input.handle_type(event, self._screen)
                     if event.key == pygame.K_RETURN and output != '':
                         return int(output)
-                    
-            new_input.draw(self._screen)
-            pygame.display.update()
+                    self.draw()
+                    new_input.draw(self._screen)
+                    pygame.display.update()
+            
 
     def deal(self, wager):
         "first subloop add cards to hands and hands to player and dealer"
@@ -123,7 +127,9 @@ class Game:
     def dealer_play(self):
         "dealer stands on 17 otherwise hits"
         print('dealer_play')
+        pygame.time.wait(1000)
         while True:
+            
             self.draw()
             
             if self.dealer.hands[0].value < 17:
@@ -134,6 +140,7 @@ class Game:
 
         print("finished!", self.dealer.hands[0].value)
         pygame.display.update()
+        pygame.time.wait(1000)
         
     def settle(self):
         "for each player hands settles up with dealer"
@@ -205,7 +212,6 @@ class Game:
             button.draw(self._screen)
 
         pygame.display.update()
-        pygame.time.wait(1000)
 
     def on_cleanup(self):
         pygame.quit()
