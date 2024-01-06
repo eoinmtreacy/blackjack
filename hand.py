@@ -22,7 +22,7 @@ class Hand:
             self.label.draw(screen)
         for c, card in enumerate(self.cards):
             card.rect = Rect(self.rect.x + c * card_w, self.rect.y, card_w, card_h)
-            card.draw(screen)
+            card.draw(screen, card_w, card_h)
 
     @property
     def value(self):

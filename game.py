@@ -12,7 +12,7 @@ from label import Label
 class Game:
     def __init__(self):
         pygame.init()
-        self.size = self.width, self.height = 480, 300
+        self.size = self.width, self.height = 1200, 700
         self.card_w, self.card_h = self.width/16, self.height/6
         self._screen = pygame.display.set_mode((self.size))
         self._running = True
