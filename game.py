@@ -162,6 +162,7 @@ class Game:
         for hand in self.player.hands:
             self.draw()
             pygame.time.wait(1000)
+            
             if hand.bust:
                 print(f'Hand busted, you lose {hand.wager}')
 
@@ -175,6 +176,9 @@ class Game:
             elif hand.value > self.dealer.hands[0].value:
                 print(f'Hand holds, you win {hand.wager}')
                 self.account(hand.wager * 2)
+
+            elif hand.value == 21 and len(hand.cards) == 2:
+                print(f'Blackjack plays 3:2, you win {hand.wager + hand.wager/2*3}')
 
             else:
                 print('Push')

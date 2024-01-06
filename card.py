@@ -21,17 +21,6 @@ class Card:
         if not self.hidden:
             screen.blit(self.img, self.rect)
             pygame.draw.rect(screen, self.color, self.rect, 2)
-
-    def __eq__(self, other):
-        return self.value == other.value
-    
-    def __gt__(self, other):
-        if self.values.index(self.value) > other.values.index(other.value):
-            return True
-        elif self.suits.index(self.suit) > other.suits.index(other.suit) and self.values.index(self.value) == other.values.index(other.value):
-            return True
-        else:
-            return False
         
     def __str__(self):
         return (f"{self.value} of {self.suit}")
