@@ -6,7 +6,7 @@ class Deck:
         for num in range(number):
             for s in range(4):
                 for v in range(1,14):
-                    newCard = card(s, v, 0, 0)
+                    newCard = card(s, v)
                     self.cards.append(newCard)
         shuffle(self.cards)
         

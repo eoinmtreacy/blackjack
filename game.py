@@ -107,7 +107,7 @@ class Game:
                                 self.hit(hand)
                                 break
 
-                            if (event.unicode == "s" or event.unicode == "S") and len(hand.cards) == 2 and hand.cards[0].value == hand.cards[1].value:
+                            if (event.unicode == "s" or event.unicode == "S"): #and len(hand.cards) == 2 and hand.cards[0].value == hand.cards[1].value:
                                 if wager <= self.stack:
                                     self.split(wager)
                                     break
@@ -213,15 +213,15 @@ class Game:
     def draw(self):
         "called in each subloop: deal, hitting etc."
         self._screen.fill("darkgreen")
+
         for i, hand in enumerate(self.player.hands):
-                for j, card in enumerate(hand.cards):
-                    card.rect = pygame.Rect((i * self.width/len(self.player.hands)) + (j * 30), self.height/2, 30, 50)
-                    card.draw(self._screen)
+                hand.rect = pygame.Rect(i * self.width/len(self.player.hands), self.height/2, 50, 50)
+                hand.draw(self._screen)
 
         for hand in self.dealer.hands:
             for i, card in enumerate(hand.cards):
-                card.rect = pygame.Rect(i * 30, 30, 30, 50)
-                card.draw(self._screen)
+                hand.rect = pygame.Rect(0, self.height/8, 50, 50)
+                hand.draw(self._screen)
 
         for label in self.labels.values():
             label.draw(self._screen)
