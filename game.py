@@ -70,7 +70,7 @@ class Game:
 
     def deal(self, wager):
         "first subloop add cards to hands and hands to player and dealer"
-        print('deal')
+
         if len(self.deck.cards) != 0:
             self.player.hands, self.dealer.hands = [Hand(self.deck.draw(), self.deck.draw(), wager)], [Hand(self.deck.draw(True), self.deck.draw())]
             self.account(-wager)
@@ -92,7 +92,7 @@ class Game:
 
     def hitting(self, wager):
         "if not dealer blackjack (peak), await user input"
-        print('hitting')
+
         while True:
             self.draw()
             for event in pygame.event.get():
@@ -144,7 +144,7 @@ class Game:
 
     def dealer_play(self):
         "dealer stands on 17 otherwise hits"
-        print('dealer_play')
+
         while True:
             self.draw()
             pygame.time.wait(1000)
@@ -157,7 +157,6 @@ class Game:
         
     def settle(self):
         "for each player hands settles up with dealer"
-        print("settle")
 
         for hand in self.player.hands:
             self.draw()
@@ -170,15 +169,15 @@ class Game:
                 print(f'Dealer bust, hand wins {hand.wager}')
                 self.account(hand.wager * 2)
 
+            elif hand.value == 21 and len(hand.cards) == 2 and self.dealer.hands[0].value != 21:
+                print(f'Blackjack plays 2:1, you win {hand.wager * 3}')
+
             elif self.dealer.hands[0].value > hand.value:
                 print(f'Dealer wins, you lose {hand.wager}')
 
             elif hand.value > self.dealer.hands[0].value:
                 print(f'Hand holds, you win {hand.wager}')
                 self.account(hand.wager * 2)
-
-            elif hand.value == 21 and len(hand.cards) == 2:
-                print(f'Blackjack plays 3:2, you win {hand.wager + hand.wager/2*3}')
 
             else:
                 print('Push')
