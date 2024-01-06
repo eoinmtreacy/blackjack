@@ -216,8 +216,8 @@ class Game:
         self._screen.fill("darkgreen")
 
         for i, hand in enumerate(self.player.hands):
-                hand.rect = pygame.Rect(i * self.width/len(self.player.hands), self.height/2, 50, 50)
-                hand.draw(self._screen, self.card_w, self.card_h)
+            hand.rect = pygame.Rect(i * self.width/len(self.player.hands), self.height/2, 50, 50)
+            hand.draw(self._screen, self.card_w, self.card_h)
 
         for hand in self.dealer.hands:
             hand.rect = pygame.Rect(0, self.height/8, 50, 50)

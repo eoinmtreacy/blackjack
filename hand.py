@@ -9,13 +9,16 @@ class Hand:
         self.active = active
         self.rect = None
         self.color = 'yellow'
+        self.label = Label(str(self.wager))
 
     def __repr__(self):
-        return (f'{self.cards[0]} {self.cards[1]}')
+        return (f'{[card for card in self.cards]}')
     
     def draw(self, screen, card_w, card_h):
         # screen.blit(self.img, self.rect.center) -- may need to blit later but okay for now
         draw.rect(screen, self.color, self.rect, 2)
+        self.label.rect = Rect(self.rect.x, self.rect.y - card_w, card_w, card_w)
+        self.label.draw(screen)
         for c, card in enumerate(self.cards):
             card.rect = Rect(self.rect.x + c * card_w, self.rect.y, card_w, card_h)
             card.draw(screen)
