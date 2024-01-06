@@ -8,7 +8,6 @@ from hand import Hand
 from card import Card
 from input import Input
 from label import Label
-from banker import Banker
 
 class Game:
     def __init__(self):
@@ -60,7 +59,6 @@ class Game:
                     if event.key == pygame.K_RETURN and output != '':
                         return int(output)
                     
-            self._screen.fill("grey")
             new_input.draw(self._screen)
             pygame.display.update()
 
@@ -143,7 +141,6 @@ class Game:
 
         for hand in self.player.hands:
             self.draw()
-
             if hand.bust:
                 print(f'Hand busted, you lose {hand.wager}')
 
