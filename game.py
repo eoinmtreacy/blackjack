@@ -13,6 +13,7 @@ class Game:
     def __init__(self):
         pygame.init()
         self.size = self.width, self.height = 480, 300
+        self.card_w, self.card_h = self.width/16, self.height/6
         self._screen = pygame.display.set_mode((self.size))
         self._running = True
         self.player = Player("Player")
@@ -216,12 +217,11 @@ class Game:
 
         for i, hand in enumerate(self.player.hands):
                 hand.rect = pygame.Rect(i * self.width/len(self.player.hands), self.height/2, 50, 50)
-                hand.draw(self._screen)
+                hand.draw(self._screen, self.card_w, self.card_h)
 
         for hand in self.dealer.hands:
-            for i, card in enumerate(hand.cards):
-                hand.rect = pygame.Rect(0, self.height/8, 50, 50)
-                hand.draw(self._screen)
+            hand.rect = pygame.Rect(0, self.height/8, 50, 50)
+            hand.draw(self._screen, self.card_w, self.card_h)
 
         for label in self.labels.values():
             label.draw(self._screen)

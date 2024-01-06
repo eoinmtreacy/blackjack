@@ -13,11 +13,11 @@ class Hand:
     def __repr__(self):
         return (f'{self.cards[0]} {self.cards[1]}')
     
-    def draw(self, screen):
+    def draw(self, screen, card_w, card_h):
         # screen.blit(self.img, self.rect.center) -- may need to blit later but okay for now
         draw.rect(screen, self.color, self.rect, 2)
         for c, card in enumerate(self.cards):
-            card.rect = Rect(self.rect.x + c * 30, self.rect.y, 30, 50)
+            card.rect = Rect(self.rect.x + c * card_w, self.rect.y, card_w, card_h)
             card.draw(screen)
 
     @property
