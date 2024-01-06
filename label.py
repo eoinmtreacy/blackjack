@@ -14,3 +14,4 @@ class Label:
 
     def update(self, new):
         self.value = new
+        self.img = self.font.render(self.value, True, self.color)
