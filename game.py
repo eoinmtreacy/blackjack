@@ -1,12 +1,12 @@
 import pygame
 from pygame.locals import * 
 
-from button import Button
 from player import Player
 from deck import Deck
 from hand import Hand
 from card import Card
 from input import Input
+from button import Button
 from label import Label
 
 class Game:
@@ -60,7 +60,7 @@ class Game:
                 if event.type == pygame.QUIT:
                     game_running = False
                 elif event.type == pygame.KEYDOWN:
-                    output = new_input.handle_type(event, self._screen)
+                    output = new_input.handle_type(event)
                     if event.key == pygame.K_RETURN and output != '':
                         return int(output)
                     self.draw()
@@ -107,7 +107,7 @@ class Game:
                                 self.hit(hand)
                                 break
 
-                            if (event.unicode == "s" or event.unicode == "S"):
+                            if (event.unicode == "s" or event.unicode == "S") and len(hand.cards) == 2 and hand.cards[0].value == hand.cards[1].value:
                                 if wager <= self.stack:
                                     self.split(wager)
                                     break
