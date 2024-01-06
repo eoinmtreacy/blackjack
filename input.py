@@ -24,4 +24,3 @@ class Input:
                     self.text += event.unicode
                 # Re-render the text.
                 self.img = self.font.render(self.text, True, self.color)
-                self.draw(screen)

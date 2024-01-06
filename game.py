@@ -70,7 +70,7 @@ class Game:
         "first subloop add cards to hands and hands to player and dealer"
         print('deal')
         if len(self.deck.cards) != 0:
-            self.player.hands, self.dealer.hands = [Hand(self.deck.draw(), self.deck.draw(), wager)], [Hand(self.deck.draw(), self.deck.draw())]
+            self.player.hands, self.dealer.hands = [Hand(self.deck.draw(), self.deck.draw(), wager)], [Hand(self.deck.draw(True), self.deck.draw())]
             self.account(-wager)
             self.draw()
             
@@ -100,13 +100,28 @@ class Game:
                 for hand in self.player.hands:
                     if hand.active: 
                         if event.type == pygame.KEYDOWN:
+
                             if event.unicode == "h" or event.unicode == "H":
                                 self.hit(hand)
                                 break
-                            if event.unicode == "s" or event.unicode == "S":
-                                self.split(wager)
-                                break
-                            # handle doubling: ...if event.unicode == "d" etc 
+
+                            if (event.unicode == "s" or event.unicode == "S"):
+                                if wager <= self.stack:
+                                    self.split(wager)
+                                    break
+                                else:
+                                    print("You don't have enough to split")
+                            
+                            if (event.unicode == "d" or event.unicode == "D"):
+                                if wager <= self.stack:
+                                    hand.wager *= 2
+                                    hand.active = False
+                                    self.account(-wager)
+                                    self.hit(hand)
+                                    break
+                                else:
+                                    print("You don't have enough to double")
+
                             if event.key == pygame.K_RETURN:
                                 hand.active = False
                                 break
@@ -127,20 +142,19 @@ class Game:
     def dealer_play(self):
         "dealer stands on 17 otherwise hits"
         print('dealer_play')
-        pygame.time.wait(1000)
+        for card in self.dealer.hands[0].cards: # unhide dealer hole card
+            card.hidden = False
+
         while True:
-            
             self.draw()
-            
+            pygame.time.wait(1000)
+
             if self.dealer.hands[0].value < 17:
                 hit = self.deck.draw()
                 self.dealer.hands[0].cards += (hit,)
             else:
                 break
 
-        print("finished!", self.dealer.hands[0].value)
-        pygame.display.update()
-        pygame.time.wait(1000)
         
     def settle(self):
         "for each player hands settles up with dealer"
@@ -148,6 +162,7 @@ class Game:
 
         for hand in self.player.hands:
             self.draw()
+            pygame.time.wait(1000)
             if hand.bust:
                 print(f'Hand busted, you lose {hand.wager}')
 

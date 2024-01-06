@@ -10,5 +10,7 @@ class Deck:
                     self.cards.append(newCard)
         shuffle(self.cards)
         
-    def draw(self):
-        return self.cards.pop()
+    def draw(self, hidden=False):
+        card = self.cards.pop()
+        card.hidden = hidden
+        return card
