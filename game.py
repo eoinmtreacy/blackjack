@@ -38,8 +38,10 @@ class Game:
             blackjack = self.deal(wager)
             if not blackjack:
                 bust = self.hitting(wager)
+                self.dealer.hands[0].cards[0].hidden = False # unhide dealer hole card at end of hitting
                 if not bust:
                     self.dealer_play()
+            self.dealer.hands[0].cards[0].hidden = False # unhide dealer hole card if blackjack
             self.settle()
         self.on_cleanup()
 
@@ -142,9 +144,6 @@ class Game:
     def dealer_play(self):
         "dealer stands on 17 otherwise hits"
         print('dealer_play')
-        for card in self.dealer.hands[0].cards: # unhide dealer hole card
-            card.hidden = False
-
         while True:
             self.draw()
             pygame.time.wait(1000)
