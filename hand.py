@@ -8,17 +8,14 @@ class Hand:
         self.wager = wager
         self.active = active
         self.rect = None
-        self.color = 'yellow'
         self.label = Label(str(self.wager))
 
     def __repr__(self):
         return (f'{[card for card in self.cards]}')
     
     def draw(self, screen, card_w, card_h):
-        # screen.blit(self.img, self.rect.center) -- may need to blit later but okay for now
-        # draw.rect(screen, self.color, self.rect, 2)
         if self.wager: # stops wager label drawing on dealer cards
-            self.label.rect = Rect(self.rect.x, self.rect.y - card_w, card_w, card_w)
+            self.label.rect = Rect(self.rect.x, self.rect.y - card_w, card_w, card_w) # wager label
             self.label.draw(screen)
         for c, card in enumerate(self.cards):
             card.rect = Rect(self.rect.x + c * card_w, self.rect.y, card_w, card_h)
@@ -39,6 +36,7 @@ class Hand:
     def bust(self):
         if self.value > 21:
             self.active = False
+            self.label = Label("0", color='crimson')
             return True
         else:
             return False

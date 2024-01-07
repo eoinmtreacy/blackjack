@@ -159,29 +159,34 @@ class Game:
         "for each player hands settles up with dealer"
 
         for hand in self.player.hands:
-            self.draw()
-            pygame.time.wait(1000)
-
             if hand.bust:
                 print(f'Hand busted, you lose {hand.wager}')
 
             elif self.dealer.hands[0].bust:
                 print(f'Dealer bust, hand wins {hand.wager}')
                 self.account(hand.wager * 2)
+                hand.label = Label("+" + str(hand.wager * 2), color="green")
 
             elif hand.value == 21 and len(hand.cards) == 2 and self.dealer.hands[0].value != 21:
                 print(f'Blackjack plays 2:1, you win {hand.wager * 3}')
+                hand.label = Label("+" + str(hand.wager * 3), color="yellow")
 
             elif self.dealer.hands[0].value > hand.value:
                 print(f'Dealer wins, you lose {hand.wager}')
+                self.label = Label("0", color='crimson')
 
             elif hand.value > self.dealer.hands[0].value:
                 print(f'Hand holds, you win {hand.wager}')
                 self.account(hand.wager * 2)
+                hand.label = Label("+" + str(hand.wager * 2), color="green")
 
             else:
                 print('Push')
                 self.account(hand.wager)
+                self.label = Label("0", color='lightgrey')
+
+            self.draw()
+            pygame.time.wait(1000)
 
     def hit(self, curr_hand):
         hit = self.deck.draw()

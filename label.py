@@ -1,10 +1,10 @@
 import pygame
 
 class Label:
-    def __init__(self, value, x=0, y=0, w=0, h=0, font_size=24):
+    def __init__(self, value, x=0, y=0, w=0, h=0, font_size=24, color='lightgrey'):
         self.value = value
         self.rect = pygame.Rect(x, y, w, h)
-        self.color = "lightgrey"
+        self.color = color
         self.font = pygame.font.Font(None, font_size)
         self.img = self.font.render(self.value, True, self.color)
 
