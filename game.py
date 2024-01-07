@@ -43,6 +43,8 @@ class Game:
                     self.dealer_play()
             self.dealer.hands[0].cards[0].hidden = False # unhide dealer hole card if blackjack
             self.settle()
+            self.draw()
+            pygame.time.wait(1000)
         self.on_cleanup()
 
     def on_event(self, event):
@@ -159,6 +161,8 @@ class Game:
         "for each player hands settles up with dealer"
 
         for hand in self.player.hands:
+            self.draw()
+            pygame.time.wait(1000)
             if hand.bust:
                 print(f'Hand busted, you lose {hand.wager}')
 
@@ -173,7 +177,7 @@ class Game:
 
             elif self.dealer.hands[0].value > hand.value:
                 print(f'Dealer wins, you lose {hand.wager}')
-                self.label = Label("0", color='crimson')
+                hand.label = Label("0", color='crimson')
 
             elif hand.value > self.dealer.hands[0].value:
                 print(f'Hand holds, you win {hand.wager}')
@@ -184,9 +188,6 @@ class Game:
                 print('Push')
                 self.account(hand.wager)
                 self.label = Label("0", color='lightgrey')
-
-            self.draw()
-            pygame.time.wait(1000)
 
     def hit(self, curr_hand):
         hit = self.deck.draw()
