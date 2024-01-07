@@ -29,6 +29,10 @@ class Game:
         self.labels = {
             'stack': Label(str(self.stack), self.width/6, (self.height/4) * 3, self.width/7, self.height/8)
         }
+        self.messages = {
+            # 'bust': Label("You're bust! Play again?"),
+            # 'shoe_empty': Label("Shoe reshuffling...")
+        }
     
     def on_execute(self):
         while(self._running):
@@ -64,7 +68,10 @@ class Game:
                 elif event.type == pygame.KEYDOWN:
                     output = new_input.handle_type(event)
                     if event.key == pygame.K_RETURN and output != '':
-                        return int(output)
+                        if int(output) > self.stack:
+                            print("Can't bet more than you have!")
+                        else:
+                            return int(output)
                     self.draw()
                     new_input.draw(self._screen)
                     pygame.display.update()
