@@ -11,7 +11,7 @@ class Input:
 
     def draw(self, screen):
         screen.blit(self.img, self.rect.center)
-        pygame.draw.rect(screen,self.color, self.rect, 2)
+        pygame.draw.rect(screen, self.color, self.rect, 2)
 
     def handle_type(self,event):
         if self.active:
@@ -20,7 +20,7 @@ class Input:
                     return self.text
                 elif event.key == pygame.K_BACKSPACE:
                     self.text = self.text[:-1]
-                else:
+                elif event.unicode in '0123456789':
                     self.text += event.unicode
                 # Re-render the text.
                 self.img = self.font.render(self.text, True, self.color)
