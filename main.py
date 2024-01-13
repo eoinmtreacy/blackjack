@@ -1,6 +1,6 @@
+import asyncio
 import pygame
 from pygame.locals import *
-
 from library import *
 
 pygame.init()
@@ -91,7 +91,7 @@ STATES = {
     'settle': False
     }
 
-def main():
+async def main():
     global STACK
     game_running = True
     STATES['wager'] = True
@@ -219,4 +219,6 @@ def main():
             STATES['settle'] = False
             STATES['wager'] = True
 
-main()
+        await asyncio.sleep(0)
+
+asyncio.run(main())
