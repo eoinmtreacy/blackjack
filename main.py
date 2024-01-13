@@ -4,7 +4,9 @@ from pygame.locals import *
 from library import *
 
 pygame.init()
+pygame.event.set_allowed([QUIT, KEYDOWN])
 
+CLOCK = pygame.time.Clock()
 SIZE = WIDTH, HEIGHT = 1200, 700
 CARD_SIZE = CARD_WIDTH, CARD_HEIGHT = WIDTH/13, HEIGHT/5
 SCREEN = pygame.display.set_mode((SIZE))
@@ -178,9 +180,12 @@ async def main():
                 elif DEALER.hands[0].value == 21 and PLAYER.hands[0].value == 21:
                     blackjack = True
 
+            STATES['deal'] = False
             if not blackjack:
-                STATES['deal'] = False
                 STATES['hitting'] = True
+            else:
+                pygame.time.wait(1000)
+                STATES['settle'] = True
 
         if STATES['dealer_play']:
             while DEALER.hands[0].value < 17:
@@ -216,9 +221,11 @@ async def main():
 
                 draw()
                 pygame.time.wait(1000)
+
             STATES['settle'] = False
             STATES['wager'] = True
 
+        CLOCK.tick(18)
         await asyncio.sleep(0)
 
 asyncio.run(main())
