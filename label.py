@@ -5,7 +5,7 @@ class Label:
         self.value = value + "$"
         self.rect = pygame.Rect(x, y, w, h)
         self.color = color
-        self.font = pygame.font.Font(None, 77)
+        self.font = pygame.font.Font(None, 70)
         self.img = self.font.render(self.value, True, self.color)
 
     def draw(self, screen):

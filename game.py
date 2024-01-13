@@ -21,13 +21,13 @@ class Game:
         self.dealer = Player("Dealer")
         self.deck = Deck(Card,8)
         self.buttons = {
-            'hit': Button("hit", self.width/64*33, self.height/9*7, self.width, "h"),
-            'stand': Button("stand", self.width/64*41, self.height/9*7, self.width, " "),
-            'split': Button("split", self.width/64*49, self.height/9*7, self.width, "s"),
-            'double': Button("double", self.width/64*57, self.height/9*7, self.width, "d"),
+            'hit': Button("hit", self.width/64*33, self.height/9*7.5, self.width, "h"),
+            'stand': Button("stand", self.width/64*41, self.height/9*7.5, self.width, " "),
+            'split': Button("split", self.width/64*49, self.height/9*7.5, self.width, "s"),
+            'double': Button("double", self.width/64*57, self.height/9*7.5, self.width, "d"),
         }
         self.labels = {
-            'stack': Label(str(self.stack), self.width/16*4, self.height/9*7, self.width/4, self.width/64*6)
+            'stack': Label(str(self.stack), self.width/16*4, self.height/9*7.5, self.width/4, self.width/64*6)
         }
         self.messages = {
             # 'bust': Label("You're bust! Play again?"),
@@ -216,14 +216,14 @@ class Game:
     def account(self, amount):
         "handles settling arithmetic and passing updated stack labels"
         self.stack += amount
-        self.labels['stack'] = Label(str(self.stack), self.width/16*4, self.height/9*7, self.width/4, self.width/64*6)
+        self.labels['stack'] = Label(str(self.stack), self.width/16*4, self.height/9*7.5, self.width/4, self.width/64*6)
 
     def draw(self, *args):
         "called in each subloop: deal, hitting etc."
         self._screen.fill("darkgreen")
 
         for i, hand in enumerate(self.player.hands):
-            hand.rect = pygame.Rect(i * self.width/len(self.player.hands) + self.width/16, self.height/9*5, 50, 50)
+            hand.rect = pygame.Rect(i * self.width/len(self.player.hands) + self.width/16, self.height/9*5.5, 50, 50)
             hand.draw(self._screen, self.card_w, self.card_h)
 
         for hand in self.player.hands: # focus on active hand

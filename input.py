@@ -9,12 +9,14 @@ class Input:
         self.text = ""
         self.font = pygame.font.Font(None, int(self.height))
         self.img = self.font.render(self.text, True, self.color)
+        self.border = pygame.image.load('./src/input.png')
         self.active = True
 
     def draw(self, screen):
         center_x, center_y = self.rect.center # find center of input rect
         img_x, img_y = self.img.get_size() # find the size of the text
         screen.blit(self.img, (center_x - img_x/2, center_y - img_y/2)) # blit to center
+        screen.blit(pygame.transform.scale(self.border, self.size), self.rect) # blit to center
         pygame.draw.rect(screen, self.color, self.rect, 2)
         # input(self.img.get_size()[0])
         
