@@ -53,7 +53,7 @@ class Game:
 
     def get_wager(self):
         "get user bet input, only accepts integers (as strings), returns wager as int"
-        new_input = Input('white', self.width/16*6, self.height/9*3, self.width/16*4, self.width/64*6)
+        new_input = Input(self.width/16*6, self.height/9*3, self.width/16*4, self.width/64*6)
         bet_button = Button("bet", self.width/16*10.2, self.height/9*3, self.width, " ")
         self.buttons['bet'] = bet_button
 
@@ -65,7 +65,8 @@ class Game:
                     output = new_input.handle_type(event)
                     if event.key == pygame.K_RETURN and output != '':
                         if int(output) > self.stack:
-                            print("Can't bet more than you have!")
+                            #TODO can't bet that much animation, input shake or something
+                            pass
                         else:
                             del(self.buttons['bet'])
                             return (True, int(output))
@@ -135,9 +136,10 @@ class Game:
 
     def dealer_play(self):
         "dealer stands on 17"
-        self.draw()
-        pygame.time.wait(1000)
+
         while True:
+            self.draw()
+            pygame.time.wait(1000)
             if self.dealer.hands[0].value < 17:
                 self.hit(self.dealer.hands[0]) 
             else:
@@ -166,7 +168,7 @@ class Game:
 
             else:
                 self.account(hand.wager)
-                self.label = Label("0", color='lightgrey')
+                hand.label = Label("0", color='lightgrey')
             
             self.draw()
             pygame.time.wait(1000)
