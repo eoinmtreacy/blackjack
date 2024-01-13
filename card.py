@@ -6,7 +6,7 @@ class Card:
         self.hidden = hidden
         self.suits = ("clubs", "diamonds", "hearts", "spades")
         self.colors = ("black", "red", "red", "black")
-        self.values = (None, "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king")
+        self.values = (None, "ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king")
         self.suit = self.suits[suit]
         self.value = self.values[value]
         self.rect = None

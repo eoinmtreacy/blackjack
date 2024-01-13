@@ -15,7 +15,7 @@ class Game:
         self.size = self.width, self.height = 1200, 700
         self.card_w, self.card_h = self.width/13, self.height/5
         self._screen = pygame.display.set_mode((self.size))
-        self.background = pygame.transform.scale(pygame.image.load('./src/background1.png'), self.size)
+        self.background = pygame.transform.scale(pygame.image.load('./src/background_bluf.png'), self.size)
         self._running = True
         self.player = Player("Player")
         self.stack = 1000 #stack tied to game, not player, up for debate, not sure if more than one player in needed

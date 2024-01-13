@@ -27,9 +27,11 @@ class Hand:
         for card in self.cards:
             addition = 10 if card.values.index(card.value) > 10 else card.values.index(card.value)
             value += addition
-            if value + 10 < 22:
-                if card.value == "Ace":
-                    value += 10
+
+        if value > 21:
+            aces = [card.value for card in self.cards].count("ace")
+            value -= 10 * aces
+            
         return value
     
     @property
