@@ -21,13 +21,13 @@ class Game:
         self.dealer = Player("Dealer")
         self.deck = Deck(Card,8)
         self.buttons = {
-            'hit': Button("hit", self.width/64*33, self.height/4 * 3, self.width/64*6, self.width/64*6, "red", "h"),
-            'stand': Button("stand", self.width/64*41, self.height/4 * 3, self.width/64*6, self.width/64*6, "blue", " "),
-            'split': Button("split", self.width/64*49, self.height/4 * 3, self.width/64*6, self.width/64*6, "grey", "s"),
-            'double': Button("double", self.width/64*57, self.height/4 * 3, self.width/64*6, self.width/64*6, "hotpink", "d"),
+            'hit': Button("hit", self.width/64*33, self.height/9*7, self.width/64*6, self.width/64*6, "red", "h"),
+            'stand': Button("stand", self.width/64*41, self.height/9*7, self.width/64*6, self.width/64*6, "blue", " "),
+            'split': Button("split", self.width/64*49, self.height/9*7, self.width/64*6, self.width/64*6, "grey", "s"),
+            'double': Button("double", self.width/64*57, self.height/9*7, self.width/64*6, self.width/64*6, "hotpink", "d"),
         }
         self.labels = {
-            'stack': Label(str(self.stack), self.width/6, (self.height/4) * 3, self.width/7, self.height/8)
+            'stack': Label(str(self.stack), self.width/16*4, self.height/9*7, self.width/4, self.width/64*6)
         }
         self.messages = {
             # 'bust': Label("You're bust! Play again?"),
@@ -219,7 +219,7 @@ class Game:
     def account(self, amount):
         "handles settling arithmetic and passing updated stack labels"
         self.stack += amount
-        self.labels['stack'] = Label(str(self.stack), self.width/6, (self.height/4) * 3, self.width/7, self.height/8)
+        self.labels['stack'] = Label(str(self.stack), self.width/16*4, self.height/9*7, self.width/4, self.width/64*6)
 
     def draw(self):
         "called in each subloop: deal, hitting etc."
