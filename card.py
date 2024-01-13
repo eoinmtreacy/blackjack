@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import *
 
 class Card:
-    def __init__(self, suit, value, hidden=False):
+    def __init__(self, suit, value, img, hidden=False):
         self.hidden = hidden
         self.suits = ("clubs", "diamonds", "hearts", "spades")
         self.colors = ("black", "red", "red", "black")
@@ -13,8 +13,7 @@ class Card:
         self.color = self.colors[suit]
         self.text = self.value[0] + self.suit[0]
         self.font = pygame.font.SysFont('Helvetica', 24)
-        self.img = self.font.render(self.text, True, self.color)
-        self.img = pygame.image.load(f'./src/cards/English_pattern_{self.value}_of_{self.suit}.svg')
+        self.img = img
 
 
     def draw(self,screen, card_w, card_h):
