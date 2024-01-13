@@ -56,7 +56,7 @@ class Game:
             self._running = False
 
     def get_wager(self):
-        new_input = Input('grey', self.width/16*6, self.height/9*4, self.width/16*4, self.height/9)
+        new_input = Input('grey', self.width/16*6, self.height/9*3, self.width/16*4, self.height/9)
         self.draw()
         new_input.draw(self._screen)
         pygame.display.update()
@@ -226,7 +226,7 @@ class Game:
         self._screen.fill("darkgreen")
 
         for i, hand in enumerate(self.player.hands):
-            hand.rect = pygame.Rect(i * self.width/len(self.player.hands), self.height/2, 50, 50)
+            hand.rect = pygame.Rect(i * self.width/len(self.player.hands), self.height/9*5, 50, 50)
             hand.draw(self._screen, self.card_w, self.card_h)
 
         for hand in self.player.hands: # focus on active hand
