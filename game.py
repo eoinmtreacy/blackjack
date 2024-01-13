@@ -13,21 +13,22 @@ class Game:
     def __init__(self):
         pygame.init()
         self.size = self.width, self.height = 1200, 700
-        self.card_w, self.card_h = self.width/16, self.height/6
+        self.card_w, self.card_h = self.width/13, self.height/5
         self._screen = pygame.display.set_mode((self.size))
+        self.background = pygame.transform.scale(pygame.image.load('./src/background_bluf.png'), self.size)
         self._running = True
         self.player = Player("Player")
         self.stack = 1000 #stack tied to game, not player, up for debate, not sure if more than one player in needed
         self.dealer = Player("Dealer")
         self.deck = Deck(Card,8)
         self.buttons = {
-            'hit': Button("hit", self.width/2, self.height/4 * 3, 30, 30, "red", "h"),
-            'split': Button("split", self.width/2 + 30, self.height/4 * 3, 60, 30, "yellow", "s"),
-            'stand': Button("stand", self.width/2 + 90, self.height/4 * 3, 60, 30, "grey", " "),
-            'double': Button("double", self.width/2 + 150, self.height/4 * 3, 60, 30, "hotpink", "d")
+            'hit': Button("hit", self.width/64*33, self.height/9*7.5, self.width, "h"),
+            'stand': Button("stand", self.width/64*41, self.height/9*7.5, self.width, " "),
+            'split': Button("split", self.width/64*49, self.height/9*7.5, self.width, "s"),
+            'double': Button("double", self.width/64*57, self.height/9*7.5, self.width, "d"),
         }
         self.labels = {
-            'stack': Label(str(self.stack), self.width/6, (self.height/4) * 3, self.width/7, self.height/8)
+            'stack': Label(str(self.stack), self.width/16*4, self.height/9*7.5, self.width/4, self.width/64*6)
         }
         self.messages = {
             # 'bust': Label("You're bust! Play again?"),
@@ -56,10 +57,9 @@ class Game:
             self._running = False
 
     def get_wager(self):
-        new_input = Input('green', self.width/8*3, self.height/8*3, self.width/4, self.height/8)
-        self.draw()
-        new_input.draw(self._screen)
-        pygame.display.update()
+        new_input = Input('white', self.width/16*6, self.height/9*3, self.width/16*4, self.width/64*6)
+        bet_button = Button("bet", self.width/16*10.2, self.height/9*3, self.width, " ")
+        self.buttons['bet'] = bet_button
 
         while True:
             for event in pygame.event.get():
@@ -71,11 +71,9 @@ class Game:
                         if int(output) > self.stack:
                             print("Can't bet more than you have!")
                         else:
+                            del(self.buttons['bet'])
                             return int(output)
-                    self.draw()
-                    new_input.draw(self._screen)
-                    pygame.display.update()
-            
+            self.draw(new_input, bet_button)
 
     def deal(self, wager):
         "first subloop add cards to hands and hands to player and dealer"
@@ -126,7 +124,7 @@ class Game:
                             if (event.unicode == "d" or event.unicode == "D"):
                                 if wager <= self.stack:
                                     hand.wager *= 2
-                                    hand.label.update(str(wager * 2))
+                                    hand.label.update(str(wager * 2) + "$")
                                     hand.active = False
                                     self.account(-wager)
                                     self.hit(hand)
@@ -219,25 +217,26 @@ class Game:
     def account(self, amount):
         "handles settling arithmetic and passing updated stack labels"
         self.stack += amount
-        self.labels['stack'] = Label(str(self.stack), self.width/6, (self.height/4) * 3, self.width/7, self.height/8)
+        self.labels['stack'] = Label(str(self.stack), self.width/16*4, self.height/9*7.5, self.width/4, self.width/64*6)
 
-    def draw(self):
+    def draw(self, *args):
         "called in each subloop: deal, hitting etc."
-        self._screen.fill("darkgreen")
+        # self._screen.fill("darkgreen")
+        self._screen.blit(self.background, (0,0))
 
         for i, hand in enumerate(self.player.hands):
-            hand.rect = pygame.Rect(i * self.width/len(self.player.hands), self.height/2, 50, 50)
+            hand.rect = pygame.Rect(i * self.width/len(self.player.hands) + self.width/16, self.height/9*5.5, 50, 50)
             hand.draw(self._screen, self.card_w, self.card_h)
 
         for hand in self.player.hands: # focus on active hand
             if hand.active:
-                focus = pygame.Rect(hand.rect.x - 2, hand.rect.y - 2, 4 + (len(hand.cards) * self.card_w), 4 + self.card_h)
-                pygame.draw.rect(self._screen, color="yellow", rect=focus, width=2)
+                focus = pygame.Rect(hand.rect.x - 4, hand.rect.y - 4, 8 + (len(hand.cards) * self.card_w), 8 + self.card_h)
+                pygame.draw.rect(self._screen, color="yellow", rect=focus, width=4)
                 break
 
 
         for hand in self.dealer.hands:
-            hand.rect = pygame.Rect(0, self.height/8, 50, 50)
+            hand.rect = pygame.Rect(self.width/16, self.height/8, 50, 50)
             hand.draw(self._screen, self.card_w, self.card_h)
 
         for label in self.labels.values():
@@ -245,6 +244,9 @@ class Game:
 
         for button in self.buttons.values():
             button.draw(self._screen)
+
+        for each in args:
+            each.draw(self._screen)
 
         pygame.display.update()
 
