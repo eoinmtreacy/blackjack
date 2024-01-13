@@ -36,6 +36,7 @@ class Game:
         }
     
     def play(self):
+        "main loop, subloops return boolean pairs for _running and logic branching respectively"
         while(self._running):
             self._running, wager = self.get_wager()
             if wager:
@@ -93,7 +94,6 @@ class Game:
 
     def hitting(self, wager):
         "if not dealer blackjack (peak), await user input"
-
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -148,7 +148,6 @@ class Game:
             
     def settle(self):
         "for each player hand settles up with dealer"
-
         for hand in self.player.hands:
             if hand.bust:
                 pass
@@ -175,18 +174,19 @@ class Game:
             pygame.time.wait(1000)
 
     def hit(self, curr_hand):
+        "add card to hand"
         hit = self.deck.draw()
         curr_hand.cards += (hit,)
         return True if curr_hand.bust else False
         
     def split(self, wager):
+        "append second hands to self.player.hands using one card from splitting hand"
         for hand in self.player.hands:
             if hand.active:
                 curr_hand = self.player.hands.index(hand)
                 break
-
         # create new player hand with second card from splitting hand
-        self.player.add_hand(Hand(self.player.hands[curr_hand].cards[1], self.deck.draw(), wager))
+        self.player.hands.append(Hand(self.player.hands[curr_hand].cards[1], self.deck.draw(), wager))
         # knock off new hands wager
         self.account(-wager)
         # replace curr_hand with the hand with same first and new second card 
@@ -210,7 +210,6 @@ class Game:
                 focus = pygame.Rect(hand.rect.x - 4, hand.rect.y - 4, 8 + (len(hand.cards) * self.card_w), 8 + self.card_h)
                 pygame.draw.rect(self._screen, color="yellow", rect=focus, width=4)
                 break
-
 
         for hand in self.dealer.hands:
             hand.rect = pygame.Rect(self.width/16, self.height/8, 50, 50)

@@ -2,8 +2,8 @@ from random import shuffle
 import pygame 
 
 class Deck:
+    "container for cards, used in init to load card face and back images"
     def __init__(self, card, number):
-
         self.values = [None, "ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king"]
         self.suits = ["clubs", "diamonds", "hearts", "spades"]
         self.hidden_img = pygame.image.load('./src/cards/hidden.svg')
