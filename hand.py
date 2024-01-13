@@ -25,12 +25,15 @@ class Hand:
     def value(self):
         value = 0
         for card in self.cards:
-            addition = 10 if card.values.index(card.value) > 10 else card.values.index(card.value)
-            value += addition
+            add = 10 if card.values.index(card.value) > 10 else card.values.index(card.value)
+            value += add
 
-        if value > 21:
+        if value + 10 < 22:
             aces = [card.value for card in self.cards].count("ace")
-            value -= 10 * aces
+            for ace in range(aces):
+                value += 10
+                if value + 10 > 21:
+                    break
             
         return value
     

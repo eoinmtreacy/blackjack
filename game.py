@@ -14,9 +14,11 @@ class Game:
         pygame.init()
         self.size = self.width, self.height = 1200, 700
         self.card_w, self.card_h = self.width/13, self.height/5
+
         self._screen = pygame.display.set_mode((self.size))
         self.background = pygame.transform.scale(pygame.image.load('./src/background_bluf.png'), self.size)
         self._running = True
+
         self.player = Player("Player")
         self.stack = 1000 #stack tied to game, not player, up for debate, not sure if more than one player in needed
         self.dealer = Player("Dealer")
@@ -29,10 +31,6 @@ class Game:
         }
         self.labels = {
             'stack': Label(str(self.stack), self.width/16*4, self.height/9*7.5, self.width/4, self.width/64*6)
-        }
-        self.messages = {
-            # 'bust': Label("You're bust! Play again?"),
-            # 'shoe_empty': Label("Shoe reshuffling...")
         }
     
     def on_execute(self):
@@ -57,6 +55,7 @@ class Game:
             self._running = False
 
     def get_wager(self):
+        "get user bet input, only accepts integers (as strings), returns wager as int"
         new_input = Input('white', self.width/16*6, self.height/9*3, self.width/16*4, self.width/64*6)
         bet_button = Button("bet", self.width/16*10.2, self.height/9*3, self.width, " ")
         self.buttons['bet'] = bet_button
@@ -76,26 +75,22 @@ class Game:
             self.draw(new_input, bet_button)
 
     def deal(self, wager):
-        "first subloop add cards to hands and hands to player and dealer"
-
+        "add cards to hands and hands to player and dealer, returns False if neither player blackjack (21) else True"
         if len(self.deck.cards) != 0:
             self.player.hands, self.dealer.hands = [Hand(self.deck.draw(), self.deck.draw(), wager)], [Hand(self.deck.draw(True), self.deck.draw())]
             self.account(-wager)
             self.draw()
             
             if self.dealer.hands[0].value == 21 and self.player.hands[0].value != 21:
-                print(f'Blackjack, dealer wins')
                 return True
             elif self.dealer.hands[0].value != 21 and self.player.hands[0].value == 21:
-                print(f'Player blackjack, you lucky duck')
                 return True
             elif self.dealer.hands[0].value == 21 and self.player.hands[0].value == 21:
-                print(f'Both dealt blackjack (...what are the odds... about 0.22% at an even cout)')
                 return True
             else:
                 return False
-        else:
-            print("Deck is empty")
+            
+            #TODO handle empty deck
 
     def hitting(self, wager):
         "if not dealer blackjack (peak), await user input"
