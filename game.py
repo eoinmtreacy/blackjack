@@ -123,7 +123,7 @@ class Game:
                             if (event.unicode == "d" or event.unicode == "D"):
                                 if wager <= self.stack:
                                     hand.wager *= 2
-                                    hand.label.update(str(wager * 2))
+                                    hand.label.update(str(wager * 2) + "$")
                                     hand.active = False
                                     self.account(-wager)
                                     self.hit(hand)
