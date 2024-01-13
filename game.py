@@ -78,6 +78,7 @@ class Game:
             self.player.hands, self.dealer.hands = [Hand(self.deck.draw(), self.deck.draw(), wager)], [Hand(self.deck.draw(True), self.deck.draw())]
             self.account(-wager)
             self.draw()
+            pygame.time.wait(1000)
             
             if self.dealer.hands[0].value == 21 and self.player.hands[0].value != 21:
                 return True
@@ -154,21 +155,21 @@ class Game:
 
             elif self.dealer.hands[0].bust:
                 self.account(hand.wager * 2)
-                hand.label = Label("+" + str(hand.wager * 2), color="green")
+                hand.label.update("+" + str(hand.wager * 2), color="green")
 
             elif hand.value == 21 and len(hand.cards) == 2 and self.dealer.hands[0].value != 21:
-                hand.label = Label("+" + str(hand.wager * 3), color="yellow")
+                hand.label.update("+" + str(hand.wager * 3), color="yellow")
 
             elif self.dealer.hands[0].value > hand.value:
-                hand.label = Label("0", color='crimson')
+                hand.label.update("0", color='crimson')
 
             elif hand.value > self.dealer.hands[0].value:
                 self.account(hand.wager * 2)
-                hand.label = Label("+" + str(hand.wager * 2), color="green")
+                hand.label.update("+" + str(hand.wager * 2), color="green")
 
             else:
                 self.account(hand.wager)
-                hand.label = Label("0", color='lightgrey')
+                hand.label.update("0", color='lightgrey')
             
             self.draw()
             pygame.time.wait(1000)
