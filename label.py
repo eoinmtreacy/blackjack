@@ -5,13 +5,14 @@ class Label:
         self.value = value
         self.rect = pygame.Rect(x, y, w, h)
         self.color = color
-        self.font = pygame.font.Font(None, font_size)
+        self.font = pygame.font.Font(None, 77)
         self.img = self.font.render(self.value, True, self.color)
 
     def draw(self, screen):
-        x, y = self.rect.center # find center of input rect
-        screen.blit(self.img, (x - self.img.get_size()[0]/2, y)) # center typed input by taking half the size away from the center
-        pygame.draw.rect(screen, self.color, self.rect, 2)
+        center_x, center_y = self.rect.center # find center of input rect
+        img_x, img_y = self.img.get_size()
+        screen.blit(self.img, (center_x - img_x/2, center_y - img_y/2)) # center typed input by taking half the size away from the center
+        pygame.draw.rect(screen, self.color, self.rect, -1)
 
     def update(self, new):
         self.value = new
