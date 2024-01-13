@@ -25,10 +25,11 @@ LABELS = {
     'stack': Label(str(STACK), WIDTH/16*4, HEIGHT/9*7.5, WIDTH/4, WIDTH/64*6)
 }
 
-def account(STACK, amount):
+def account(stack, amount):
     "handles settling arithmetic and passing updated stack labels"
-    STACK += amount
-    LABELS['stack'] = Label(str(STACK), WIDTH/16*4, HEIGHT/9*7.5, WIDTH/4, WIDTH/64*6)
+    stack += amount
+    LABELS['stack'] = Label(str(stack), WIDTH/16*4, HEIGHT/9*7.5, WIDTH/4, WIDTH/64*6)
+    return stack
 
 INPUT = Input(WIDTH/16*6, HEIGHT/9*3, WIDTH/16*4, WIDTH/64*6)
 BET = Button("bet", WIDTH/16*10.2, HEIGHT/9*3, WIDTH, " ")
@@ -70,6 +71,7 @@ def hit(curr_hand):
         
 def split(wager):
     "append second hands to self.player.hands using one card from splitting hand"
+    global STACK
     for hand in PLAYER.hands:
         if hand.active:
             curr_hand = PLAYER.hands.index(hand)
@@ -77,7 +79,7 @@ def split(wager):
     # create new player hand with second card from splitting hand
     PLAYER.hands.append(Hand(PLAYER.hands[curr_hand].cards[1], DECK.draw(), label_size=CARD_WIDTH, wager=wager))
     # knock off new hands wager
-    account(STACK, -wager)
+    STACK = account(STACK, -wager)
     # replace curr_hand with the hand with same first and new second card 
     PLAYER.hands[curr_hand] = Hand(PLAYER.hands[curr_hand].cards[0], DECK.draw(), label_size=CARD_WIDTH, wager=wager)
 
@@ -90,6 +92,7 @@ STATES = {
     }
 
 def main():
+    global STACK
     game_running = True
     STATES['wager'] = True
 
@@ -117,7 +120,6 @@ def main():
                 for hand in PLAYER.hands:
                     if hand.active: 
                         if event.type == pygame.KEYDOWN:
-                            print("key press")
 
                             if event.unicode == "h" or event.unicode == "H":
                                 hit(hand)
@@ -136,7 +138,8 @@ def main():
                                     hand.wager *= 2
                                     hand.label.update("$" + str(WAGER * 2))
                                     hand.active = False
-                                    account(STACK, -WAGER)
+                                    STACK = account(STACK, -WAGER)
+                                    print(STACK)
                                     hit(hand)
                                     break
                                 else:
@@ -151,20 +154,20 @@ def main():
                     DEALER.hands[0].cards[0].hidden = False
                     if all([hand.bust for hand in PLAYER.hands]):
                         STATES['settle'] = True
-                        print("settle")
+
                     else:
                         STATES['dealer_play'] = True
-                        print("dealer play")
+
 
                 draw()
 
         if STATES['deal']:
             blackjack = False
-            print("deal")
 
             if len(DECK.cards) > 52*4:
                 PLAYER.hands, DEALER.hands = [Hand(DECK.draw(), DECK.draw(), label_size=CARD_WIDTH, wager=WAGER)], [Hand(DECK.draw(True), DECK.draw(), label_size=CARD_WIDTH)]
-                account(STACK, -WAGER)
+                STACK = account(STACK, -WAGER)
+                print(STACK)
                 draw()
                 pygame.time.wait(1000)
                 
@@ -178,8 +181,6 @@ def main():
             if not blackjack:
                 STATES['deal'] = False
                 STATES['hitting'] = True
-                print("hitting")
-                print(STATES)
 
         if STATES['dealer_play']:
             while DEALER.hands[0].value < 17:
@@ -188,7 +189,6 @@ def main():
                 hit(DEALER.hands[0]) 
             STATES['dealer_play'] = False
             STATES['settle'] = True
-            print("settle")
 
         if STATES['settle']:
             for hand in PLAYER.hands:
@@ -196,22 +196,22 @@ def main():
                     pass
 
                 elif DEALER.hands[0].bust:
-                    account(STACK, hand.wager * 2)
+                    STACK = account(STACK, hand.wager * 2)
                     hand.label.update("+$" + str(hand.wager * 2), color="green")
 
                 elif hand.value == 21 and len(hand.cards) == 2 and DEALER.hands[0].value != 21:
-                    account(STACK, hand.wager * 3)
+                    STACK = account(STACK, hand.wager * 3)
                     hand.label.update("+$" + str(hand.wager * 3), color="yellow")
 
                 elif DEALER.hands[0].value > hand.value:
                     hand.label.update("$0", color='crimson')
 
                 elif hand.value > DEALER.hands[0].value:
-                    account(STACK, hand.wager * 2)
+                    STACK = account(STACK, hand.wager * 2)
                     hand.label.update("+$" + str(hand.wager * 2), color="green")
 
                 else:
-                    account(STACK, hand.wager)
+                    STACK = account(STACK, hand.wager)
                     hand.label.update("$0", color='lightgrey')
 
                 draw()
