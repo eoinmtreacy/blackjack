@@ -232,7 +232,7 @@ class Game:
         for hand in self.player.hands: # focus on active hand
             if hand.active:
                 focus = pygame.Rect(hand.rect.x - 2, hand.rect.y - 2, 4 + (len(hand.cards) * self.card_w), 4 + self.card_h)
-                pygame.draw.rect(self._screen, color="yellow", rect=focus, width=2)
+                pygame.draw.rect(self._screen, color="yellow", rect=focus, width=4)
                 break
 
 
