@@ -6,7 +6,7 @@ class Deck:
 
         self.values = [None, "ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king"]
         self.suits = ["clubs", "diamonds", "hearts", "spades"]
-
+        self.hidden_img = pygame.image.load('./src/cards/hidden.svg')
         self.images = {}
 
         for value in self.values:
@@ -21,7 +21,7 @@ class Deck:
         for _ in range(number):
             for s in range(4):
                 for v in range(1,14):
-                    newCard = card(s, v, self.images[f'{self.values[v]}{self.suits[s]}'])
+                    newCard = card(s, v, self.images[f'{self.values[v]}{self.suits[s]}'], self.hidden_img)
                     self.cards.append(newCard)
         shuffle(self.cards)
         

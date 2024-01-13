@@ -79,6 +79,7 @@ class Game:
 
         if len(self.deck.cards) != 0:
             self.player.hands, self.dealer.hands = [Hand(self.deck.draw(), self.deck.draw(), wager)], [Hand(self.deck.draw(True), self.deck.draw())]
+            print([card.hidden for card in self.dealer.hands[0].cards])
             self.account(-wager)
             self.draw()
             

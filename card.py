@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import *
 
 class Card:
-    def __init__(self, suit, value, img, hidden=False):
+    def __init__(self, suit, value, img, hidden_img, hidden=False):
         self.hidden = hidden
         self.suits = ("clubs", "diamonds", "hearts", "spades")
         self.colors = ("black", "red", "red", "black")
@@ -14,11 +14,15 @@ class Card:
         self.text = self.value[0] + self.suit[0]
         self.font = pygame.font.SysFont('Helvetica', 24)
         self.img = img
-
-
-    def draw(self,screen, card_w, card_h):
+        self.back = hidden_img
+                                            
+    def draw(self, screen, card_w, card_h):
         if not self.hidden:
             screen.blit(pygame.transform.scale(self.img, (card_w, card_h)), self.rect)
+            pygame.draw.rect(screen, self.color, self.rect, -1)
+        
+        else:
+            screen.blit(pygame.transform.scale(self.back, (card_w, card_h)), self.rect)
             pygame.draw.rect(screen, self.color, self.rect, -1)
         
     def __str__(self):
