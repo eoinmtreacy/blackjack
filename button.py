@@ -2,19 +2,17 @@ import pygame
 import time
 
 class Button:
-    def __init__(self, name, x, y, w, color, on_click):
+    def __init__(self, name, x, y, w, on_click):
         self.name = name
         self.size = self.width, self.height = w/64*6, w/64*6
         self.rect = pygame.Rect((x, y), (self.size))
-        self.color = color
         self.font = pygame.font.SysFont('Helvetica', 24)
-        self.img = self.font.render(self.name, True, self.color)
         self.img = pygame.image.load(f'./src/buttons/{name}.png')
         self.on_click = on_click
     
     def draw(self, screen):
         screen.blit(pygame.transform.scale(self.img, (self.width, self.height)), self.rect)
-        pygame.draw.rect(screen, self.color, self.rect, 2)
+        pygame.draw.rect(screen, "grey", self.rect, -1)
         self.process()
 
     def handle_click(self):

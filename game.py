@@ -21,10 +21,10 @@ class Game:
         self.dealer = Player("Dealer")
         self.deck = Deck(Card,8)
         self.buttons = {
-            'hit': Button("hit", self.width/64*33, self.height/9*7, self.width, "red", "h"),
-            'stand': Button("stand", self.width/64*41, self.height/9*7, self.width, "blue", " "),
-            'split': Button("split", self.width/64*49, self.height/9*7, self.width, "grey", "s"),
-            'double': Button("double", self.width/64*57, self.height/9*7, self.width, "hotpink", "d"),
+            'hit': Button("hit", self.width/64*33, self.height/9*7, self.width, "h"),
+            'stand': Button("stand", self.width/64*41, self.height/9*7, self.width, " "),
+            'split': Button("split", self.width/64*49, self.height/9*7, self.width, "s"),
+            'double': Button("double", self.width/64*57, self.height/9*7, self.width, "d"),
         }
         self.labels = {
             'stack': Label(str(self.stack), self.width/16*4, self.height/9*7, self.width/4, self.width/64*6)

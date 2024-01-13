@@ -1,17 +1,20 @@
 import pygame
 
 class Input:
-    def __init__(self,color,x,y,h,w):
-        self.rect = pygame.Rect(x,y,h,w)
+    def __init__(self,color,x,y,w, h):
+        self.size = self.width, self.height = (w, h)
+        self.pos = self.x, self.y = (x, y)
+        self.rect = pygame.Rect(self.pos, self.size)
         self.color = color
         self.text = ""
-        self.font = pygame.font.Font(None, 24)
+        self.font = pygame.font.Font(None, int(self.height))
         self.img = self.font.render(self.text, True, self.color)
         self.active = True
 
     def draw(self, screen):
-        x, y = self.rect.center # find center of input rect
-        screen.blit(self.img, (x - self.img.get_size()[0]/2, y)) # center typed input by taking half the size away from the center
+        center_x, center_y = self.rect.center # find center of input rect
+        img_x, img_y = self.img.get_size() # find the size of the text
+        screen.blit(self.img, (center_x - img_x/2, center_y - img_y/2)) # blit to center
         pygame.draw.rect(screen, self.color, self.rect, 2)
         # input(self.img.get_size()[0])
         
