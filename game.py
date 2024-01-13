@@ -21,10 +21,10 @@ class Game:
         self.dealer = Player("Dealer")
         self.deck = Deck(Card,8)
         self.buttons = {
-            'hit': Button("hit", self.width/2, self.height/4 * 3, 30, 30, "red", "h"),
-            'split': Button("split", self.width/2 + 30, self.height/4 * 3, 60, 30, "yellow", "s"),
-            'stand': Button("stand", self.width/2 + 90, self.height/4 * 3, 60, 30, "grey", " "),
-            'double': Button("double", self.width/2 + 150, self.height/4 * 3, 60, 30, "hotpink", "d")
+            'hit': Button("hit", self.width/64*33, self.height/4 * 3, self.width/64*6, self.width/64*6, "red", "h"),
+            'stand': Button("stand", self.width/64*41, self.height/4 * 3, self.width/64*6, self.width/64*6, "blue", " "),
+            'split': Button("split", self.width/64*49, self.height/4 * 3, self.width/64*6, self.width/64*6, "grey", "s"),
+            'double': Button("double", self.width/64*57, self.height/4 * 3, self.width/64*6, self.width/64*6, "hotpink", "d"),
         }
         self.labels = {
             'stack': Label(str(self.stack), self.width/6, (self.height/4) * 3, self.width/7, self.height/8)
@@ -56,7 +56,7 @@ class Game:
             self._running = False
 
     def get_wager(self):
-        new_input = Input('green', self.width/8*3, self.height/8*3, self.width/4, self.height/8)
+        new_input = Input('grey', self.width/16*6, self.height/9*4, self.width/16*4, self.height/9)
         self.draw()
         new_input.draw(self._screen)
         pygame.display.update()
