@@ -56,8 +56,8 @@ class Game:
             self._running = False
 
     def get_wager(self):
-        new_input = Input('grey', self.width/16*6, self.height/9*3, self.width/16*4, self.height/9)
-        bet_button = Button("bet", self.width/16*11, self.height/9*3, self.width, " ")
+        new_input = Input('grey', self.width/16*6, self.height/9*3, self.width/16*4, self.width/64*6)
+        bet_button = Button("bet", self.width/16*10.2, self.height/9*3, self.width, " ")
         self.buttons['bet'] = bet_button
 
         while True:

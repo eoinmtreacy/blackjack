@@ -17,9 +17,7 @@ class Input:
         img_x, img_y = self.img.get_size() # find the size of the text
         screen.blit(self.img, (center_x - img_x/2, center_y - img_y/2)) # blit to center
         screen.blit(pygame.transform.scale(self.border, self.size), self.rect) # blit to center
-        pygame.draw.rect(screen, self.color, self.rect, 2)
-        # input(self.img.get_size()[0])
-        
+        pygame.draw.rect(screen, self.color, self.rect, -1)
 
     def handle_type(self,event):
         if self.active:
