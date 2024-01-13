@@ -15,15 +15,19 @@ class Card:
         self.font = pygame.font.SysFont('Helvetica', 24)
         self.img = img
         self.back = hidden_img
+        # print(self.back.get_size())
                                             
     def draw(self, screen, card_w, card_h):
         if not self.hidden:
             screen.blit(pygame.transform.scale(self.img, (card_w, card_h)), self.rect)
             pygame.draw.rect(screen, self.color, self.rect, -1)
+            # print(pygame.transform.scale(self.img, (card_w, card_h)).get_size())
         
         else:
             screen.blit(pygame.transform.scale(self.back, (card_w, card_h)), self.rect)
             pygame.draw.rect(screen, self.color, self.rect, -1)
+            # print(pygame.transform.scale(self.back, (card_w, card_h)).get_size())
+
         
     def __str__(self):
         return (f"{self.value} of {self.suit}")
