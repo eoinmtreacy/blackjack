@@ -1,10 +1,8 @@
 import pygame
 from pygame.locals import * 
 
-from player import Player
-from deck import Deck
-from hand import Hand
-from card import Card
+from deck import (Deck, Card)
+from hand import (Player, Hand)
 from input import Input
 from button import Button
 from label import Label

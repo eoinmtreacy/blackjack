@@ -2,6 +2,11 @@ from pygame import (Rect, draw)
 # from pygame.locals import *
 from label import Label
 
+class Player:
+    def __init__(self, name):
+        self.name = name
+        self.hands = []
+
 class Hand:
     def __init__(self, card1, card2, wager = 0, active = True):
         self.cards = (card1, card2)
