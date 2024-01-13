@@ -57,9 +57,8 @@ class Game:
 
     def get_wager(self):
         new_input = Input('grey', self.width/16*6, self.height/9*3, self.width/16*4, self.height/9)
-        self.draw()
-        new_input.draw(self._screen)
-        pygame.display.update()
+        bet_button = Button("bet", self.width/16*11, self.height/9*3, self.width, " ")
+        self.buttons['bet'] = bet_button
 
         while True:
             for event in pygame.event.get():
@@ -71,11 +70,9 @@ class Game:
                         if int(output) > self.stack:
                             print("Can't bet more than you have!")
                         else:
+                            del(self.buttons['bet'])
                             return int(output)
-                    self.draw()
-                    new_input.draw(self._screen)
-                    pygame.display.update()
-            
+            self.draw(new_input, bet_button)
 
     def deal(self, wager):
         "first subloop add cards to hands and hands to player and dealer"
@@ -221,7 +218,7 @@ class Game:
         self.stack += amount
         self.labels['stack'] = Label(str(self.stack), self.width/16*4, self.height/9*7, self.width/4, self.width/64*6)
 
-    def draw(self):
+    def draw(self, *args):
         "called in each subloop: deal, hitting etc."
         self._screen.fill("darkgreen")
 
@@ -245,6 +242,9 @@ class Game:
 
         for button in self.buttons.values():
             button.draw(self._screen)
+
+        for each in args:
+            each.draw(self._screen)
 
         pygame.display.update()
 

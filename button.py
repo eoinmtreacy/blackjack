@@ -26,7 +26,9 @@ class Button:
 
     def process(self):
         pos = pygame.mouse.get_pos()
+        print(pos)
         if self.rect.collidepoint(pos):
             if pygame.mouse.get_pressed(num_buttons=3)[0]:
+                print("click")
                 time.sleep(0.25)
                 self.handle_click() 
