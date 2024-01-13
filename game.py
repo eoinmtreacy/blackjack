@@ -20,39 +20,36 @@ class Game:
         self._running = True
 
         self.player = Player("Player")
-        self.stack = 1000 #stack tied to game, not player, up for debate, not sure if more than one player in needed
         self.dealer = Player("Dealer")
         self.deck = Deck(Card,8)
+
         self.buttons = {
             'hit': Button("hit", self.width/64*33, self.height/9*7.5, self.width, "h"),
             'stand': Button("stand", self.width/64*41, self.height/9*7.5, self.width, " "),
             'split': Button("split", self.width/64*49, self.height/9*7.5, self.width, "s"),
             'double': Button("double", self.width/64*57, self.height/9*7.5, self.width, "d"),
         }
+
+        self.stack = 1000 #stack tied to game, not player, up for debate, not sure if more than one player in needed
         self.labels = {
             'stack': Label(str(self.stack), self.width/16*4, self.height/9*7.5, self.width/4, self.width/64*6)
         }
     
-    def on_execute(self):
+    def play(self):
         while(self._running):
-            for event in pygame.event.get():
-                self.on_event(event)
-            wager = self.get_wager()
-            blackjack = self.deal(wager)
-            if not blackjack:
-                bust = self.hitting(wager)
-                self.dealer.hands[0].cards[0].hidden = False # unhide dealer hole card at end of hitting
-                if not bust:
-                    self.dealer_play()
-            self.dealer.hands[0].cards[0].hidden = False # unhide dealer hole card if blackjack
-            self.settle()
+            self._running, wager = self.get_wager()
+            if wager:
+                blackjack = self.deal(wager)
+                if not blackjack:
+                    self._running, bust = self.hitting(wager)
+                    self.dealer.hands[0].cards[0].hidden = False # unhide dealer hole card at end of hitting
+                    if not bust:
+                        self.dealer_play()
+                self.dealer.hands[0].cards[0].hidden = False # unhide dealer hole card if blackjack
+                self.settle()
             self.draw()
             pygame.time.wait(1000)
-        self.on_cleanup()
-
-    def on_event(self, event):
-        if event.type == pygame.QUIT:
-            self._running = False
+        pygame.quit()
 
     def get_wager(self):
         "get user bet input, only accepts integers (as strings), returns wager as int"
@@ -63,7 +60,7 @@ class Game:
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    game_running = False
+                    return (False, False)
                 elif event.type == pygame.KEYDOWN:
                     output = new_input.handle_type(event)
                     if event.key == pygame.K_RETURN and output != '':
@@ -71,7 +68,7 @@ class Game:
                             print("Can't bet more than you have!")
                         else:
                             del(self.buttons['bet'])
-                            return int(output)
+                            return (True, int(output))
             self.draw(new_input, bet_button)
 
     def deal(self, wager):
@@ -96,11 +93,9 @@ class Game:
         "if not dealer blackjack (peak), await user input"
 
         while True:
-            self.draw()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    game_running = False
-                    break
+                    return (False, True) # return self._gamerunning, bust = False, True
                 for hand in self.player.hands:
                     if hand.active: 
                         if event.type == pygame.KEYDOWN:
@@ -108,8 +103,9 @@ class Game:
                             if event.unicode == "h" or event.unicode == "H":
                                 self.hit(hand)
                                 break
-
-                            if (event.unicode == "s" or event.unicode == "S"): #and len(hand.cards) == 2 and hand.cards[0].value == hand.cards[1].value:
+                            
+                            # conditions for split: key press, only two cards in hand and both the same value
+                            if (event.unicode == "s" or event.unicode == "S") and len(hand.cards) == 2 and hand.cards[0].value == hand.cards[1].value:
                                 if wager <= self.stack:
                                     self.split(wager)
                                     break
@@ -132,71 +128,55 @@ class Game:
                                 break
 
             # while any hands active keep playing
-            if any([hand.active for hand in self.player.hands]):
-                pass
-            else:
-                # all hands.bust == true
-                if all([hand.bust for hand in self.player.hands]):
-                    print("True")
-                    return True
-                else:
-                    # at least one not bust 
-                    print("False")
-                    return False
+            if not any([hand.active for hand in self.player.hands]):
+                return (True, True) if all([hand.bust for hand in self.player.hands]) else (True, False)
+            
+            self.draw()
 
     def dealer_play(self):
-        "dealer stands on 17 otherwise hits"
-
+        "dealer stands on 17"
+        self.draw()
+        pygame.time.wait(1000)
         while True:
-            self.draw()
-            pygame.time.wait(1000)
-
             if self.dealer.hands[0].value < 17:
-                hit = self.deck.draw()
-                self.dealer.hands[0].cards += (hit,)
+                self.hit(self.dealer.hands[0]) 
             else:
                 break
-        
+            
     def settle(self):
-        "for each player hands settles up with dealer"
+        "for each player hand settles up with dealer"
 
         for hand in self.player.hands:
-            self.draw()
-            pygame.time.wait(1000)
             if hand.bust:
-                print(f'Hand busted, you lose {hand.wager}')
+                pass
 
             elif self.dealer.hands[0].bust:
-                print(f'Dealer bust, hand wins {hand.wager}')
                 self.account(hand.wager * 2)
                 hand.label = Label("+" + str(hand.wager * 2), color="green")
 
             elif hand.value == 21 and len(hand.cards) == 2 and self.dealer.hands[0].value != 21:
-                print(f'Blackjack plays 2:1, you win {hand.wager * 3}')
                 hand.label = Label("+" + str(hand.wager * 3), color="yellow")
 
             elif self.dealer.hands[0].value > hand.value:
-                print(f'Dealer wins, you lose {hand.wager}')
                 hand.label = Label("0", color='crimson')
 
             elif hand.value > self.dealer.hands[0].value:
-                print(f'Hand holds, you win {hand.wager}')
                 self.account(hand.wager * 2)
                 hand.label = Label("+" + str(hand.wager * 2), color="green")
 
             else:
-                print('Push')
                 self.account(hand.wager)
                 self.label = Label("0", color='lightgrey')
+            
+            self.draw()
+            pygame.time.wait(1000)
 
     def hit(self, curr_hand):
         hit = self.deck.draw()
         curr_hand.cards += (hit,)
-        print(f'{hit} ({curr_hand.value})')
         return True if curr_hand.bust else False
         
     def split(self, wager):
-        curr_hand = int
         for hand in self.player.hands:
             if hand.active:
                 curr_hand = self.player.hands.index(hand)
@@ -215,8 +195,7 @@ class Game:
         self.labels['stack'] = Label(str(self.stack), self.width/16*4, self.height/9*7.5, self.width/4, self.width/64*6)
 
     def draw(self, *args):
-        "called in each subloop: deal, hitting etc."
-        # self._screen.fill("darkgreen")
+        "draw pieces for each subloop with variable args for input, bet button etc."
         self._screen.blit(self.background, (0,0))
 
         for i, hand in enumerate(self.player.hands):
@@ -244,6 +223,3 @@ class Game:
             each.draw(self._screen)
 
         pygame.display.update()
-
-    def on_cleanup(self):
-        pygame.quit()
