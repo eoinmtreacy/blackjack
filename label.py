@@ -9,7 +9,8 @@ class Label:
         self.img = self.font.render(self.value, True, self.color)
 
     def draw(self, screen):
-        screen.blit(self.img, self.rect.center)
+        x, y = self.rect.center # find center of input rect
+        screen.blit(self.img, (x - self.img.get_size()[0]/2, y)) # center typed input by taking half the size away from the center
         pygame.draw.rect(screen, self.color, self.rect, 2)
 
     def update(self, new):

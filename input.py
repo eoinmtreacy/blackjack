@@ -10,8 +10,11 @@ class Input:
         self.active = True
 
     def draw(self, screen):
-        screen.blit(self.img, self.rect.center)
+        x, y = self.rect.center # find center of input rect
+        screen.blit(self.img, (x - self.img.get_size()[0]/2, y)) # center typed input by taking half the size away from the center
         pygame.draw.rect(screen, self.color, self.rect, 2)
+        # input(self.img.get_size()[0])
+        
 
     def handle_type(self,event):
         if self.active:
