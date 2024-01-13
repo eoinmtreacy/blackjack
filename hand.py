@@ -8,11 +8,11 @@ class Player:
         self.hands = []
 
 class Hand:
-    def __init__(self, card1, card2, wager = 0, active = True):
+    def __init__(self, card1, card2, label_size, wager = 0, active = True):
         self.cards = (card1, card2)
         self.wager = wager
         self.active = active
-        self.label = Label(str(self.wager))
+        self.label = Label(str(self.wager), w=label_size, h=label_size)
     
     def draw(self, screen, card_w, card_h):
         if self.wager: # stops wager label drawing on dealer cards

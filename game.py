@@ -74,7 +74,7 @@ class Game:
     def deal(self, wager):
         "add cards to hands and hands to player and dealer, returns False if neither player blackjack (21) else True"
         if len(self.deck.cards) != 0:
-            self.player.hands, self.dealer.hands = [Hand(self.deck.draw(), self.deck.draw(), wager)], [Hand(self.deck.draw(True), self.deck.draw())]
+            self.player.hands, self.dealer.hands = [Hand(self.deck.draw(), self.deck.draw(), label_size=self.card_w, wager=wager)], [Hand(self.deck.draw(True), self.deck.draw(), label_size=self.card_w)]
             self.account(-wager)
             self.draw()
             pygame.time.wait(1000)
@@ -105,7 +105,7 @@ class Game:
                                 break
                             
                             # conditions for split: key press, only two cards in hand and both the same value
-                            if (event.unicode == "s" or event.unicode == "S") and len(hand.cards) == 2 and hand.cards[0].value == hand.cards[1].value:
+                            if (event.unicode == "s" or event.unicode == "S"): #  and len(hand.cards) == 2 and hand.cards[0].value == hand.cards[1].value:
                                 if wager <= self.stack:
                                     self.split(wager)
                                     break
@@ -115,7 +115,7 @@ class Game:
                             if (event.unicode == "d" or event.unicode == "D"):
                                 if wager <= self.stack:
                                     hand.wager *= 2
-                                    hand.label.update(str(wager * 2) + "$")
+                                    hand.label.update("$" + str(wager * 2))
                                     hand.active = False
                                     self.account(-wager)
                                     self.hit(hand)
@@ -152,22 +152,23 @@ class Game:
 
             elif self.dealer.hands[0].bust:
                 self.account(hand.wager * 2)
-                hand.label.update("+" + str(hand.wager * 2), color="green")
+                hand.label.update("+$" + str(hand.wager * 2), color="green")
 
             elif hand.value == 21 and len(hand.cards) == 2 and self.dealer.hands[0].value != 21:
-                hand.label.update("+" + str(hand.wager * 3), color="yellow")
+                self.account(hand.wager * 3)
+                hand.label.update("+$" + str(hand.wager * 3), color="yellow")
 
             elif self.dealer.hands[0].value > hand.value:
-                hand.label.update("0", color='crimson')
+                hand.label.update("$0", color='crimson')
 
             elif hand.value > self.dealer.hands[0].value:
                 self.account(hand.wager * 2)
-                hand.label.update("+" + str(hand.wager * 2), color="green")
+                hand.label.update("+$" + str(hand.wager * 2), color="green")
 
             else:
                 self.account(hand.wager)
-                hand.label.update("0", color='lightgrey')
-            
+                hand.label.update("$0", color='lightgrey')
+
             self.draw()
             pygame.time.wait(1000)
 
@@ -184,11 +185,11 @@ class Game:
                 curr_hand = self.player.hands.index(hand)
                 break
         # create new player hand with second card from splitting hand
-        self.player.hands.append(Hand(self.player.hands[curr_hand].cards[1], self.deck.draw(), wager))
+        self.player.hands.append(Hand(self.player.hands[curr_hand].cards[1], self.deck.draw(), label_size=self.card_w, wager=wager))
         # knock off new hands wager
         self.account(-wager)
         # replace curr_hand with the hand with same first and new second card 
-        self.player.hands[curr_hand] = Hand(self.player.hands[curr_hand].cards[0], self.deck.draw(), wager)
+        self.player.hands[curr_hand] = Hand(self.player.hands[curr_hand].cards[0], self.deck.draw(), label_size=self.card_w, wager=wager)
     
     def account(self, amount):
         "handles settling arithmetic and passing updated stack labels"
