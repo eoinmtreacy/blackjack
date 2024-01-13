@@ -15,6 +15,7 @@ class Game:
         self.size = self.width, self.height = 1200, 700
         self.card_w, self.card_h = self.width/13, self.height/5
         self._screen = pygame.display.set_mode((self.size))
+        self.background = pygame.transform.scale(pygame.image.load('./src/background1.png'), self.size)
         self._running = True
         self.player = Player("Player")
         self.stack = 1000 #stack tied to game, not player, up for debate, not sure if more than one player in needed
@@ -56,7 +57,7 @@ class Game:
             self._running = False
 
     def get_wager(self):
-        new_input = Input('grey', self.width/16*6, self.height/9*3, self.width/16*4, self.width/64*6)
+        new_input = Input('white', self.width/16*6, self.height/9*3, self.width/16*4, self.width/64*6)
         bet_button = Button("bet", self.width/16*10.2, self.height/9*3, self.width, " ")
         self.buttons['bet'] = bet_button
 
@@ -220,7 +221,8 @@ class Game:
 
     def draw(self, *args):
         "called in each subloop: deal, hitting etc."
-        self._screen.fill("darkgreen")
+        # self._screen.fill("darkgreen")
+        self._screen.blit(self.background, (0,0))
 
         for i, hand in enumerate(self.player.hands):
             hand.rect = pygame.Rect(i * self.width/len(self.player.hands) + self.width/16, self.height/9*5.5, 50, 50)
@@ -228,7 +230,7 @@ class Game:
 
         for hand in self.player.hands: # focus on active hand
             if hand.active:
-                focus = pygame.Rect(hand.rect.x - 2, hand.rect.y - 2, 4 + (len(hand.cards) * self.card_w), 4 + self.card_h)
+                focus = pygame.Rect(hand.rect.x - 4, hand.rect.y - 4, 8 + (len(hand.cards) * self.card_w), 8 + self.card_h)
                 pygame.draw.rect(self._screen, color="yellow", rect=focus, width=4)
                 break
 
