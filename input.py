@@ -7,7 +7,7 @@ class Input:
         self.rect = pygame.Rect(self.pos, self.size)
         self.color = color
         self.text = ""
-        self.font = pygame.font.Font(None, int(self.height))
+        self.font = pygame.font.Font('font.ttf', int(self.height * 0.7))
         self.img = self.font.render(self.text, True, self.color)
         self.border = pygame.image.load('./src/input.png')
         self.active = True

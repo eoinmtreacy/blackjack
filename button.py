@@ -6,7 +6,7 @@ class Button:
         self.name = name
         self.size = self.width, self.height = w/64*6, w/64*6
         self.rect = pygame.Rect((x, y), (self.size))
-        self.font = pygame.font.SysFont('Helvetica', 24)
+        # self.font = pygame.font.SysFont('Helvetica', 24)
         self.img = pygame.image.load(f'./src/buttons/{name}.png')
         self.on_click = on_click
     

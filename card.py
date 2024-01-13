@@ -12,7 +12,7 @@ class Card:
         self.rect = None
         self.color = self.colors[suit]
         self.text = self.value[0] + self.suit[0]
-        self.font = pygame.font.SysFont('Helvetica', 24)
+        # self.font = pygame.font.Font('./src/BoecklinsUniverse.tff', 24)
         self.img = img
         self.back = hidden_img
         # print(self.back.get_size())
