@@ -126,7 +126,7 @@ async def main():
                                 break
                             
                             # conditions for split: key press, only two cards in hand and both the same value
-                            if (event.unicode == "s" or event.unicode == "S"): #  and len(hand.cards) == 2 and hand.cards[0].value == hand.cards[1].value:
+                            if (event.unicode == "s" or event.unicode == "S") and len(hand.cards) == 2 and hand.cards[0].value == hand.cards[1].value:
                                 if WAGER <= STACK:
                                     split(WAGER)
                                     break
