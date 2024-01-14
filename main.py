@@ -115,8 +115,6 @@ async def main():
                                 WAGER = int(output)
                                 STATES['wager'] = False
                                 STATES['deal'] = True
-            
-                draw(INPUT, BET)
 
             if STATES['hitting']:
                 for hand in PLAYER.hands:
@@ -159,9 +157,6 @@ async def main():
 
                     else:
                         STATES['dealer_play'] = True
-
-
-                draw()
 
         if STATES['deal']:
             blackjack = False
@@ -225,7 +220,7 @@ async def main():
             STATES['settle'] = False
             STATES['wager'] = True
 
-        CLOCK.tick(18)
+        draw(INPUT, BET) if STATES['wager'] else draw()
         await asyncio.sleep(0)
 
 asyncio.run(main())
